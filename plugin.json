@@ -13,7 +13,7 @@
   },
   "readme": {
     "default": "README.md",
-    "zh_CN": "README"
+    "zh_CN": "README.md"
   },
   "i18n": [
     "zh_CN"

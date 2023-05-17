@@ -1,5 +1,5 @@
 {
-  "name": "plugin-sample",
+  "name": "siyuan-center-width",
   "version": "0.0.1",
   "description": "This is a sample plugin for Siyuan (https://b3log.org/siyuan)",
   "main": ".src/index.js",
@@ -9,7 +9,7 @@
     "build": "webpack --mode production"
   },
   "keywords": [],
-  "author": "Vanessa",
+  "author": "frostime",
   "license": "MIT",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "5.29.0",
