@@ -1,8 +1,4 @@
 {
-  "addTopBarIcon": "使用插件添加一个顶栏按钮",
-  "cancel": "取消",
-  "save": "保存",
-  "byeMenu": "再见，菜单！",
-  "helloPlugin": "你好，插件！",
-  "byePlugin": "再见，插件！"
+  "title": "更改中央面板宽度",
+  "bye": "不打扰了, 再见"
 }

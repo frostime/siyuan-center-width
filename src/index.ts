@@ -18,7 +18,7 @@ class ChangeWidthDialog extends Dialog {
         </div>
         `
         super({
-            title: `更改中央面板宽度: ${plugin.width}%`,
+            title: `${plugin.i18n.title}: ${plugin.width}%`,
             content: dom,
             destroyCallback: () => {
                 plugin.saveData("width", plugin.width);
@@ -29,7 +29,7 @@ class ChangeWidthDialog extends Dialog {
         header.style.textAlign = "center";
         this.element.querySelector("#centerWidth").addEventListener("input", (e) => {
             plugin.width = parseInt((e.target as HTMLInputElement).value);
-            header.innerText = `更改中央面板宽度: ${plugin.width}%`;
+            header.innerText = `${plugin.i18n.title}: ${plugin.width}%`;
             document.documentElement.style.setProperty('--centerWidth', `${plugin.width}%`);
         });
     }
@@ -47,14 +47,14 @@ export default class WidthPlugin extends Plugin {
         document.documentElement.style.setProperty('--centerWidth', `${this.width}%`);
         this.iconEle = this.addTopBar({
             icon: this.icon,
-            title: "调节面板宽度",
+            title: this.i18n.title,
             position: "left",
             callback: () => {
                 new ChangeWidthDialog(this);
             }
         });
         this.iconEle.addEventListener("contextmenu", (e) => { 
-            showMessage("不打扰了，再见", 2000, "info");
+            showMessage(this.i18n.bye, 2000, "info");
             this.iconEle.remove();
         });
     }
