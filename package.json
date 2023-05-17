@@ -18,8 +18,6 @@
     "css-loader": "^6.7.1",
     "esbuild-loader": "^3.0.1",
     "mini-css-extract-plugin": "2.3.0",
-    "sass": "^1.62.1",
-    "sass-loader": "^12.6.0",
     "siyuan": "latest",
     "tslib": "2.4.0",
     "typescript": "4.7.4",
