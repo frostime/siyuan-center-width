@@ -5,7 +5,7 @@ class ChangeWidthDialog extends Dialog {
 
     value: number;
 
-    constructor(plugin: PluginSample) {
+    constructor(plugin: WidthPlugin) {
         let dom = `
         <div id="setting" style="margin: 1rem">
             50%
@@ -20,6 +20,10 @@ class ChangeWidthDialog extends Dialog {
         super({
             title: `更改中央面板宽度: ${plugin.width}%`,
             content: dom,
+            destroyCallback: () => {
+                plugin.saveData("width", plugin.width);
+                console.log("Write width", plugin.width);
+            }
         });
         let header: HTMLDivElement = this.element.querySelector('.b3-dialog__header');
         header.style.textAlign = "center";
@@ -31,21 +35,31 @@ class ChangeWidthDialog extends Dialog {
     }
 }
 
-export default class PluginSample extends Plugin {
+export default class WidthPlugin extends Plugin {
 
     width: number;
 
-    onload() {
-        this.width = 70;
+    async onload() {
+        await this.load();
         document.documentElement.style.setProperty('--centerWidth', `${this.width}%`);
-        const topBarElement = this.addTopBar({
+        this.addTopBar({
             icon: "iconCalendar",
             title: this.i18n.addTopBarIcon,
             position: "right",
             callback: () => {
-                let dialog = new ChangeWidthDialog(this);
+                new ChangeWidthDialog(this);
             }
         });
+    }
+
+    async load() {
+        let result = await this.loadData("width");
+        console.log("Load width", result);
+        if (result) {
+            this.width = result;
+        } else {
+            this.width = 70;
+        }
     }
 
     onunload() {
