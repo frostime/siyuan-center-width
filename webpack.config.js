@@ -66,7 +66,7 @@ module.exports = (env, argv) => {
             ],
         },
         resolve: {
-            extensions: [".ts"],
+            extensions: [".ts", ".scss"],
         },
         module: {
             rules: [
@@ -79,6 +79,19 @@ module.exports = (env, argv) => {
                             options: {
                                 target: "es6",
                             }
+                        },
+                    ],
+                },
+                {
+                    test: /\.scss$/,
+                    include: [path.resolve(__dirname, "src")],
+                    use: [
+                        MiniCssExtractPlugin.loader,
+                        {
+                            loader: "css-loader", // translates CSS into CommonJS
+                        },
+                        {
+                            loader: "sass-loader", // compiles Sass to CSS
                         },
                     ],
                 }
