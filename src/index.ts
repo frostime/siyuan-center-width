@@ -1,4 +1,4 @@
-import { Plugin, Dialog, showMessage } from "siyuan";
+import { Plugin, Dialog, showMessage, confirm } from "siyuan";
 import "./index.scss";
 
 class ChangeWidthDialog extends Dialog {
@@ -50,6 +50,11 @@ export default class WidthPlugin extends Plugin {
             title: this.i18n.title,
             position: "left",
             callback: () => {
+                let enable = this.checkNotFullWidth();
+                if (!enable) {
+                    confirm(this.i18n.title, this.i18n.fullWidth);
+                    return;
+                }
                 new ChangeWidthDialog(this);
             }
         });
@@ -66,6 +71,17 @@ export default class WidthPlugin extends Plugin {
             this.width = result;
         } else {
             this.width = 70;
+        }
+    }
+
+    private checkNotFullWidth() {
+        let content = document.querySelector("div.protyle-content");
+        let attr = content.getAttribute("data-fullwidth");
+        //has attr data-fullwidth
+        if (attr === 'true') {
+            return false;
+        } else {
+            return true;
         }
     }
 
