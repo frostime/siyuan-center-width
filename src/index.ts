@@ -8,7 +8,7 @@ class ChangeWidthDialog extends Dialog {
     constructor(plugin: WidthPlugin) {
         let dom = `
         <div id="setting" style="margin: 1rem">
-            50%
+            40%
             <input
                 class="b3-slider fn__size200" id="centerWidth"
                 max="100" min="40" step="1" type="range" value="${plugin.width}"
