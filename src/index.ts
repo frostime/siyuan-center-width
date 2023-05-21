@@ -11,7 +11,7 @@ class ChangeWidthDialog extends Dialog {
             50%
             <input
                 class="b3-slider fn__size200" id="centerWidth"
-                max="100" min="50" step="1" type="range" value="${plugin.width}"
+                max="100" min="40" step="1" type="range" value="${plugin.width}"
             />
             100%
             <br/>

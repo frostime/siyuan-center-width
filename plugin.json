@@ -2,15 +2,15 @@
   "name": "siyuan-center-width",
   "author": "frostime",
   "url": "https://github.com/frostime/siyuan-center-width",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "displayName": {
-    "default": "中央面板宽度",
-    "zh_CN": "中央面板宽度",
+    "default": "编辑器宽度",
+    "zh_CN": "编辑器宽度",
     "en_US": "Center Editor Width"
   },
   "description": {
-    "default": "调节中央面板的宽度",
-    "zh_CN": "调节中央面板的宽度",
+    "default": "调节编辑器的宽度",
+    "zh_CN": "调节编辑器的宽度",
     "en_US": "Change the width of center editor"
   },
   "readme": {
