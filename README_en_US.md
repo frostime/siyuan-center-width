@@ -39,4 +39,8 @@ div.protyle-content:not([data-fullwidth="true"])>div.protyle-wysiwyg {
     padding-left: var(--lrwidth) !important.
     padding-right: var(--lrwidth) !important.
 }
+
+div.protyle-content:not([data-fullwidth="true"])>div.protyle-background>div.protyle-background__iconw {
+    left: var(--lrwidth) !important;
+}
 ```
