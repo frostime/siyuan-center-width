@@ -7,6 +7,13 @@
 			"problemMatcher": [],
 			"label": "npm: make-link",
 			"detail": "node ./scripts/make_dev_link.js"
+		},
+		{
+			"type": "npm",
+			"script": "dev",
+			"problemMatcher": [],
+			"label": "npm: dev",
+			"detail": "vite build --watch"
 		}
 	]
 }
