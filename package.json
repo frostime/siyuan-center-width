@@ -12,6 +12,7 @@
   "keywords": [],
   "author": "frostime",
   "license": "MIT",
+  "type": "module",
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.0.3",
     "@tsconfig/svelte": "^4.0.1",

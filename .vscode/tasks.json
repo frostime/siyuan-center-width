@@ -1,0 +1,12 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "make-link",
+			"problemMatcher": [],
+			"label": "npm: make-link",
+			"detail": "node ./scripts/make_dev_link.js"
+		}
+	]
+}
