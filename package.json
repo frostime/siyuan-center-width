@@ -1,12 +1,13 @@
 {
   "name": "siyuan-center-width",
   "version": "0.0.2",
-  "description": "This is a sample plugin for Siyuan (https://b3log.org/siyuan)",
+  "description": "",
   "main": ".src/index.js",
   "scripts": {
-    "lint": "eslint . --fix --cache",
-    "dev": "webpack --mode development",
-    "build": "webpack --mode production"
+    "make-link": "node ./scripts/make_dev_link.js",
+    "dev": "vite build --watch",
+    "build": "vite build",
+    "git-reset-dev": "git remote prune origin && git branch dev -f main"
   },
   "keywords": [],
   "author": "frostime",
