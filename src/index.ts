@@ -42,6 +42,8 @@ export default class WidthPlugin extends Plugin {
 
     icon: string = `<svg t="1684328935774" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1746" width="32" height="32"><path d="M180 176h-60c-4.4 0-8 3.6-8 8v656c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V184c0-4.4-3.6-8-8-8z m724 0h-60c-4.4 0-8 3.6-8 8v656c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V184c0-4.4-3.6-8-8-8zM785.3 504.3L657.7 403.6c-4.7-3.7-11.7-0.4-11.7 5.7V476H378v-62.8c0-6-7-9.4-11.7-5.7L238.7 508.3c-3.7 2.9-3.7 8.5 0 11.3l127.5 100.8c4.7 3.7 11.7 0.4 11.7-5.7V548h268v62.8c0 6 7 9.4 11.7 5.7l127.5-100.8c3.8-2.9 3.8-8.5 0.2-11.4z" p-id="1747"></path></svg>`
 
+    isFullWidth: boolean;
+
     async onload() {
         await this.load();
         document.documentElement.style.setProperty('--centerWidth', `${this.width}%`);
@@ -50,15 +52,23 @@ export default class WidthPlugin extends Plugin {
             title: this.i18n.title,
             position: "left",
             callback: () => {
-                let enable = this.checkNotFullWidth();
-                if (!enable) {
+                let isFullwidth = this.checkFullWidth();
+                //开启且没有设置过
+                if (isFullwidth === null && this.isFullWidth === undefined) {
+                    return;
+                } else if (this.isFullWidth) {
+                    isFullwidth = this.isFullWidth;
+                }
+                this.isFullWidth = isFullwidth;
+
+                if (isFullwidth) {
                     confirm(this.i18n.title, this.i18n.fullWidth);
                     return;
                 }
                 new ChangeWidthDialog(this);
             }
         });
-        this.iconEle.addEventListener("contextmenu", (e) => { 
+        this.iconEle.addEventListener("contextmenu", () => { 
             showMessage(this.i18n.bye, 2000, "info");
             this.iconEle.remove();
         });
@@ -74,14 +84,21 @@ export default class WidthPlugin extends Plugin {
         }
     }
 
-    private checkNotFullWidth() {
+    private checkFullWidth() {
         let content = document.querySelector("div.protyle-content");
+
+        if (!content) {
+            return null;
+        }
+
         let attr = content.getAttribute("data-fullwidth");
         //has attr data-fullwidth
         if (attr === 'true') {
-            return false;
-        } else {
+            this.isFullWidth = true;
             return true;
+        } else {
+            this.isFullWidth = false;
+            return false;
         }
     }
 
