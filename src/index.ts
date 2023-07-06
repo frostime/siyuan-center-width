@@ -1,7 +1,8 @@
-import { Plugin, Dialog, showMessage, confirm } from "siyuan";
-import "./index.scss";
+import { Plugin, Dialog, showMessage, confirm, getFrontend } from "siyuan";
 
 import { changelog } from "sy-plugin-changelog";
+
+import widthStyle from "./width.css?inline";
 
 class ChangeWidthDialog extends Dialog {
 
@@ -55,6 +56,20 @@ class ChangeWidthDialog extends Dialog {
     }
 }
 
+function insertStyle(id: string, style: string) {
+    let styleEle = document.createElement("style");
+    styleEle.id = id;
+    styleEle.innerHTML = style;
+    document.head.appendChild(styleEle);
+}
+
+function removeStyle(id: string) {
+    let styleEle = document.getElementById(id);
+    if (styleEle) {
+        styleEle.remove();
+    }
+}
+
 export default class WidthPlugin extends Plugin {
 
     width: number;
@@ -67,12 +82,29 @@ export default class WidthPlugin extends Plugin {
 
     async onload() {
         await this.load();
+
+        console.log(this.enableMobile, getFrontend());
+
+        let forbidMobile = !this.enableMobile && getFrontend() === "mobile";
+
+        if (forbidMobile) {
+
+        } else {
+            insertStyle("plugin-width", widthStyle);
+        }
+
+
         document.documentElement.style.setProperty('--centerWidth', `${this.width}%`);
         this.iconEle = this.addTopBar({
             icon: this.icon,
             title: this.i18n.title,
             position: "left",
             callback: () => {
+                if (forbidMobile) {
+                    showMessage('移动端已禁用', 2000, 'info');
+                    return;
+                }
+
                 let isFullwidth = this.checkFullWidth();
                 //开启且没有设置过
                 if (isFullwidth === null && this.isFullWidth === undefined) {
@@ -152,5 +184,6 @@ export default class WidthPlugin extends Plugin {
 
     onunload() {
         console.log(this.i18n.byePlugin);
+        removeStyle("plugin-width");
     }
 }
