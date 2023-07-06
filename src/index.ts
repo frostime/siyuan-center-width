@@ -101,7 +101,7 @@ export default class WidthPlugin extends Plugin {
             position: "left",
             callback: () => {
                 if (forbidMobile) {
-                    showMessage('移动端已禁用', 2000, 'info');
+                    showMessage(this.i18n.disableOnMobile, 2000, 'info');
                     return;
                 }
 

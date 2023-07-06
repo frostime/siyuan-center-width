@@ -2,5 +2,6 @@
   "title": "Change center editor width",
   "bye": "I hide myself, bye!",
   "fullWidth": "Please disable full width mode in setting before using this plugin.",
-  "setEnableMobile": "Enable in mobile device?"
+  "setEnableMobile": "Enable in mobile device?",
+  "disableOnMobile": "The plugin functionality has been disabled on mobile devices."
 }

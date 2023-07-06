@@ -2,5 +2,6 @@
   "title": "更改编辑器宽度",
   "bye": "不打扰了, 再见",
   "fullWidth": "请在设置中关闭自适应宽度后使用本插件",
-  "setEnableMobile": "是否则移动端生效?"
+  "setEnableMobile": "是否则移动端生效?",
+  "disableOnMobile": "插件功能已在移动端禁用"
 }
