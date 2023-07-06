@@ -1,6 +1,5 @@
 
 - Please turn off 'adaptive width', i.e. full width mode, before using
-- This plugin is not valid in some themes, e.g. Rem Craft
 
 ## Basic usage
 
