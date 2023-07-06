@@ -13,12 +13,17 @@ class ChangeWidthDialog extends Dialog {
             <div style="padding-bottom: 1rem">
                 40%
                 <input
-                    class="b3-slider fn__size200 b3-tooltips b3-tooltips__s" id="centerWidth"
+                    class="b3-slider fn__size200 b3-tooltips b3-tooltips__s"
                     max="100" min="40" step="1" type="range" value="${plugin.width}"
                     aria-label="${plugin.width}%" id=""
                 />
                 100%
             </div>
+            <label class="fn__flex">
+                <div class="fn__flex-1">在移动端启用?</div> 
+                <span class="fn__space"></span>
+                <input class="b3-switch fn__flex-center" type="checkbox">
+            </label>
         </div>
         `
         super({
@@ -31,9 +36,10 @@ class ChangeWidthDialog extends Dialog {
         });
         let header: HTMLDivElement = this.element.querySelector('.b3-dialog__header');
         let body: HTMLDivElement = this.element.querySelector('.b3-dialog__body');
-        const inputCenterWidth: HTMLInputElement = this.element.querySelector('#centerWidth');
         body.style.padding = "1rem";
         header.style.textAlign = "center";
+
+        const inputCenterWidth: HTMLInputElement = this.element.querySelector('input.b3-slider');
         inputCenterWidth.addEventListener("input", (e) => {
             plugin.width = parseInt((e.target as HTMLInputElement).value);
             header.innerText = `${plugin.i18n.title}: ${plugin.width}%`;
