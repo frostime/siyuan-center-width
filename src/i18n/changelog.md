@@ -20,5 +20,5 @@
 
     With the official update to the plugin icon bar, this feature has become redundant and has therefore been removed.
 
-> Note:After this update, previous width settings will be lost. Simply set the width again to apply the new settings.
+> Note:After this update, previous width settings will be lost. Simply set the width again to apply the new settings.
 
