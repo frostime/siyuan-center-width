@@ -61,7 +61,9 @@ function insertStyle(id: string, style: string) {
     let styleEle = document.createElement("style");
     styleEle.id = id;
     styleEle.innerHTML = style;
-    document.head.appendChild(styleEle);
+    setTimeout(() => {
+        document.head.appendChild(styleEle);}, 2000
+    );
 }
 
 function removeStyle(id: string) {

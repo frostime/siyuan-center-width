@@ -13,6 +13,17 @@ div.protyle-content:not([data-fullwidth="true"])>div.protyle-wysiwyg {
     padding-right: var(--lrwidth) !important;
 }
 
+/* 覆盖 rem craft 的样式 */
+.layout__center .protyle-content:not([data-fullwidth=true]) .protyle-title {
+    margin: unset !important;
+    margin-left: var(--lrwidth) !important;
+    margin-right: var(--lrwidth) !important;
+}
+.layout__center .protyle-content:not([data-fullwidth=true]) .protyle-wysiwyg {
+    padding-left: var(--lrwidth) !important;
+    padding-right: var(--lrwidth) !important;
+}
+
 div.protyle-content:not([data-fullwidth="true"])>div.protyle-background>div.protyle-background__iconw {
     left: var(--lrwidth) !important;
 }
