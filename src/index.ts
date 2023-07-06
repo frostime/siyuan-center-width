@@ -158,14 +158,19 @@ export default class WidthPlugin extends Plugin {
             }
         });
 
-        let { Dialog } = await changelog(this, 'i18n/changelog.md');
-        if (Dialog) {
-            Dialog.setFont('1rem');
-            Dialog.setSize({
-                width: '40%',
-                height: '25rem'
-            })
-        }
+        changelog(
+            this, 'i18n/changelog.md'
+        ).then(( {Dialog} ) => {
+            if (Dialog) {
+                Dialog.setFont('1rem');
+                Dialog.setSize({
+                    width: '40%',
+                    height: '25rem'
+                })
+            }
+        }).catch((e) => {
+            console.error(e);
+        });
 
     }
 
@@ -194,10 +199,7 @@ export default class WidthPlugin extends Plugin {
         } else {
             this.width = 70;
             this.enableMobile = false;
-            this.data['config'] = {
-                width: 70,
-                enableMobile: false
-            };
+            this.save();
         }
     }
 
