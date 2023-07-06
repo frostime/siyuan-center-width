@@ -79,6 +79,9 @@ export default class WidthPlugin extends Plugin {
 
     wysiwyg: WeakRef<HTMLElement>;
 
+    observer: MutationObserver;
+    onLoadProtyle: ({ detail }) => void;
+
     icon: string = `<svg t="1684328935774" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1746" width="32" height="32"><path d="M180 176h-60c-4.4 0-8 3.6-8 8v656c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V184c0-4.4-3.6-8-8-8z m724 0h-60c-4.4 0-8 3.6-8 8v656c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V184c0-4.4-3.6-8-8-8zM785.3 504.3L657.7 403.6c-4.7-3.7-11.7-0.4-11.7 5.7V476H378v-62.8c0-6-7-9.4-11.7-5.7L238.7 508.3c-3.7 2.9-3.7 8.5 0 11.3l127.5 100.8c4.7 3.7 11.7 0.4 11.7-5.7V548h268v62.8c0 6 7 9.4 11.7 5.7l127.5-100.8c3.8-2.9 3.8-8.5 0.2-11.4z" p-id="1747"></path></svg>`
 
     isFullWidth: boolean;
@@ -88,10 +91,33 @@ export default class WidthPlugin extends Plugin {
 
         console.log(this.enableMobile, getFrontend());
 
-        this.eventBus.on("loaded-protyle", ( {detail} ) => {
+        //思源会经常更改wysiwyg的padding，所以需要监听变化，一旦变化就重新设置
+        this.observer = new MutationObserver(() => {
+            let ele = this.wysiwyg?.deref();
+            if (ele) {
+                // console.log(ele.style.padding);
+                this.updateWysiwygPadding();
+                // console.log(ele.style.padding);
+            }
+        });
+
+        this.onLoadProtyle = (({ detail }) => {
+            let oldEle = this.wysiwyg?.deref();
+            if (oldEle) {
+                this.observer.disconnect();
+            }
+
             this.wysiwyg = new WeakRef(detail.wysiwyg.element);
             this.updateWysiwygPadding();
-        });
+            this.observer.observe(detail.wysiwyg.element, { 
+                childList: false,
+                attributes: true,
+                characterData: false,
+                subtree: false
+            });
+        }).bind(this);
+
+        this.eventBus.on("loaded-protyle", this.onLoadProtyle);
 
         let forbidMobile = !this.enableMobile && getFrontend() === "mobile";
 
@@ -151,7 +177,7 @@ export default class WidthPlugin extends Plugin {
             let padding = parentWidth * (1 - this.width / 100) / 2;
             ele.style.setProperty('padding-left', `${padding}px`);
             ele.style.setProperty('padding-right', `${padding}px`);
-            console.log("updateWysiwygPadding",  padding);
+            // console.log("updateWysiwygPadding", padding);
         }
     }
 
@@ -201,8 +227,10 @@ export default class WidthPlugin extends Plugin {
     }
 
     onunload() {
-        console.log(this.i18n.byePlugin);
         removeStyle("plugin-width");
         this.wysiwyg = null;
+        this.eventBus.off("loaded-protyle", this.onLoadProtyle);
+        this.observer.disconnect();
+
     }
 }
