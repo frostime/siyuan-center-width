@@ -20,7 +20,7 @@ class ChangeWidthDialog extends Dialog {
                 100%
             </div>
             <label class="fn__flex">
-                <div class="fn__flex-1">在移动端启用?</div> 
+                <div class="fn__flex-1">${plugin.i18n.setEnableMobile}</div> 
                 <span class="fn__space"></span>
                 <input class="b3-switch fn__flex-center" type="checkbox">
             </label>
@@ -45,6 +45,12 @@ class ChangeWidthDialog extends Dialog {
             header.innerText = `${plugin.i18n.title}: ${plugin.width}%`;
             inputCenterWidth.setAttribute("aria-label", `${plugin.width}%`);
             document.documentElement.style.setProperty('--centerWidth', `${plugin.width}%`);
+        });
+
+        const inputEnableMobile: HTMLInputElement = this.element.querySelector('input.b3-switch');
+        inputEnableMobile.checked = plugin.enableMobile;
+        inputEnableMobile.addEventListener("change", (e) => {
+            plugin.enableMobile = (e.target as HTMLInputElement).checked;
         });
     }
 }
