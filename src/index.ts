@@ -121,17 +121,13 @@ export default class WidthPlugin extends Plugin {
                 new ChangeWidthDialog(this);
             }
         });
-        this.iconEle.addEventListener("contextmenu", () => { 
-            showMessage(this.i18n.bye, 2000, "info");
-            this.iconEle.remove();
-        });
 
         let { Dialog } = await changelog(this, 'i18n/changelog.md');
         if (Dialog) {
             Dialog.setFont('1rem');
             Dialog.setSize({
                 width: '40%',
-                height: '20rem'
+                height: '25rem'
             })
         }
 
