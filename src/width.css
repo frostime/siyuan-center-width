@@ -16,3 +16,7 @@ div.protyle-content:not([data-fullwidth="true"])>div.protyle-wysiwyg {
 div.protyle-content:not([data-fullwidth="true"])>div.protyle-background>div.protyle-background__iconw {
     left: var(--lrwidth) !important;
 }
+
+#hello {
+    width: auto;
+}

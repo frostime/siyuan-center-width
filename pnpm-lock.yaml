@@ -1,5 +1,14 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+dependencies:
+  sy-plugin-changelog:
+    specifier: ^0.0.7
+    version: 0.0.7
+
 devDependencies:
   '@sveltejs/vite-plugin-svelte':
     specifier: ^2.0.3
@@ -26,8 +35,8 @@ devDependencies:
     specifier: ^1.62.1
     version: 1.62.1
   siyuan:
-    specifier: ^0.7.3
-    version: 0.7.4
+    specifier: ^0.7.6
+    version: 0.7.6
   svelte:
     specifier: ^3.57.0
     version: 3.59.1
@@ -796,8 +805,8 @@ packages:
     resolution: {integrity: sha512-MATJdZp8sLqDl/68LfQmbP8zKPLQNV6BIZoIgrscFDQ+RsvK/BxeDQOgyxKKoh0y/8h3BqVFnCqQ/gd+reiIXA==}
     dev: true
 
-  /siyuan@0.7.4:
-    resolution: {integrity: sha512-Lj+GgxRqjB0YZt4XmBBOgoMrZ9Cwd82h/CxHACi2t23baXC7W2zYG8eYWkZMDcLy50gQC94PzuLZrq9pZIeasw==}
+  /siyuan@0.7.6:
+    resolution: {integrity: sha512-1UljRK3kOgTb7+gXeJiZLOX9SeR6Xbw9lshbotQIli5ycv7oCDFJMnLyUSLLOFho5Ea3hnH5xK34qACMZCv8wQ==}
     dev: true
 
   /source-map-js@1.0.2:
@@ -824,6 +833,10 @@ packages:
     resolution: {integrity: sha512-pKj8fEBmqf6mq3/NfrB9SLtcJcUvjYSWyePlfCqN9gujLB25RitWK8PvFzlwim6hD/We35KbPlRteuA6rnPGcQ==}
     engines: {node: '>= 8'}
     dev: true
+
+  /sy-plugin-changelog@0.0.7:
+    resolution: {integrity: sha512-2xiSeiyp1OzMW+iuYGcQ8R+/3cxf6a4DEXwGxWXhdvDp6MdPJYsgyza/M++YoLP7B0TdDQneVWyMMMCA4y4vQg==}
+    dev: false
 
   /to-regex-range@5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
