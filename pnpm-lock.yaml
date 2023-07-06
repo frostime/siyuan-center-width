@@ -1,5 +1,14 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+dependencies:
+  sy-plugin-changelog:
+    specifier: ^0.0.7
+    version: 0.0.7
+
 devDependencies:
   '@sveltejs/vite-plugin-svelte':
     specifier: ^2.0.3
@@ -824,6 +833,10 @@ packages:
     resolution: {integrity: sha512-pKj8fEBmqf6mq3/NfrB9SLtcJcUvjYSWyePlfCqN9gujLB25RitWK8PvFzlwim6hD/We35KbPlRteuA6rnPGcQ==}
     engines: {node: '>= 8'}
     dev: true
+
+  /sy-plugin-changelog@0.0.7:
+    resolution: {integrity: sha512-2xiSeiyp1OzMW+iuYGcQ8R+/3cxf6a4DEXwGxWXhdvDp6MdPJYsgyza/M++YoLP7B0TdDQneVWyMMMCA4y4vQg==}
+    dev: false
 
   /to-regex-range@5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}

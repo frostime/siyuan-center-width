@@ -1,6 +1,8 @@
 import { Plugin, Dialog, showMessage, confirm } from "siyuan";
 import "./index.scss";
 
+import { changelog } from "sy-plugin-changelog";
+
 class ChangeWidthDialog extends Dialog {
 
     value: number;
@@ -72,6 +74,16 @@ export default class WidthPlugin extends Plugin {
             showMessage(this.i18n.bye, 2000, "info");
             this.iconEle.remove();
         });
+
+        let { Dialog } = await changelog(this, 'i18n/changelog.md');
+        if (Dialog) {
+            Dialog.setFont('1rem');
+            Dialog.setSize({
+                width: '40%',
+                height: '20rem'
+            })
+        }
+
     }
 
     async load() {
