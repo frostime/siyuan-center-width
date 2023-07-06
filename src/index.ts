@@ -9,14 +9,16 @@ class ChangeWidthDialog extends Dialog {
 
     constructor(plugin: WidthPlugin) {
         let dom = `
-        <div id="setting" style="margin: 1rem">
-            40%
-            <input
-                class="b3-slider fn__size200" id="centerWidth"
-                max="100" min="40" step="1" type="range" value="${plugin.width}"
-            />
-            100%
-            <br/>
+        <div id="plugin-width__setting">
+            <div style="padding-bottom: 1rem">
+                40%
+                <input
+                    class="b3-slider fn__size200 b3-tooltips b3-tooltips__s" id="centerWidth"
+                    max="100" min="40" step="1" type="range" value="${plugin.width}"
+                    aria-label="${plugin.width}%" id=""
+                />
+                100%
+            </div>
         </div>
         `
         super({
@@ -28,10 +30,14 @@ class ChangeWidthDialog extends Dialog {
             }
         });
         let header: HTMLDivElement = this.element.querySelector('.b3-dialog__header');
+        let body: HTMLDivElement = this.element.querySelector('.b3-dialog__body');
+        const inputCenterWidth: HTMLInputElement = this.element.querySelector('#centerWidth');
+        body.style.padding = "1rem";
         header.style.textAlign = "center";
-        this.element.querySelector("#centerWidth").addEventListener("input", (e) => {
+        inputCenterWidth.addEventListener("input", (e) => {
             plugin.width = parseInt((e.target as HTMLInputElement).value);
             header.innerText = `${plugin.i18n.title}: ${plugin.width}%`;
+            inputCenterWidth.setAttribute("aria-label", `${plugin.width}%`);
             document.documentElement.style.setProperty('--centerWidth', `${plugin.width}%`);
         });
     }
