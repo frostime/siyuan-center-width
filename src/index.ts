@@ -91,6 +91,8 @@ export default class WidthPlugin extends Plugin {
 
         console.log(this.enableMobile, getFrontend());
 
+        this.updateWysiwygPadding();
+
         //思源会经常更改wysiwyg的padding，所以需要监听变化，一旦变化就重新设置
         this.observer = new MutationObserver(() => {
             let ele = this.wysiwyg?.deref();
@@ -171,7 +173,7 @@ export default class WidthPlugin extends Plugin {
      * 更新wysiwyg的内联 padding 样式，以便让 wysiwyg 当中的 iframe 的最大宽度可以和 protyle 的宽度一致
      */
     updateWysiwygPadding() {
-        let ele = this.wysiwyg.deref();
+        let ele = this.wysiwyg?.deref();
         if (ele) {
             let parentWidth = ele.parentElement.clientWidth;
             let padding = parentWidth * (1 - this.width / 100) / 2;
