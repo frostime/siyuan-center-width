@@ -12,13 +12,13 @@
 
 ## Editor Width v0.0.5 Update
 
-- Added an additional option for whether enabling on mobile devices
+- Added an option to enable/disable the functionality for mobile devices.
 
-    Some users have reported that width adjustment is not needed on mobile devices. To address this, an option was added allowing users to enable or disable the plugin functionality on mobile devices.
+    Some users have reported that there is no need to adjust the width on mobile devices. In order to accommodate different preferences, an option has been added to allow users to enable or disable the plugin functionality on mobile devices.
 
-- Removed the feature for hiding the icon using the right-click menu
+- Removed the feature to hide the icon using right-click.
 
-    This feature has become obsolete after an official update to the plugin icon bar, so it was removed.
+    With the official update to the plugin icon bar, this feature has become redundant and has therefore been removed.
 
-> Note: After this update, previous width settings will be lost. Simply set the width again to apply the new settings.
+> Note:After this update, previous width settings will be lost. Simply set the width again to apply the new settings.
 
