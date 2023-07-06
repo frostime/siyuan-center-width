@@ -10,7 +10,7 @@
 
 > 注意: 本次更新后之前设置的宽度设置会丢失，重新设置即可
 
-## Editor Width v0.0.5 Update
+## Editor Width v0.0.5 Update
 
 - Added an option to enable/disable the functionality for mobile devices.
 
