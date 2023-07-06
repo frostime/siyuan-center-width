@@ -17,6 +17,4 @@ div.protyle-content:not([data-fullwidth="true"])>div.protyle-background>div.prot
     left: var(--lrwidth) !important;
 }
 
-#hello {
-    width: auto;
-}
+

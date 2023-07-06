@@ -32,6 +32,7 @@ class ChangeWidthDialog extends Dialog {
             content: dom,
             destroyCallback: () => {
                 plugin.save();
+                plugin.updateWysiwygPadding();
                 console.log("Write width", plugin.width);
             }
         });
@@ -76,6 +77,8 @@ export default class WidthPlugin extends Plugin {
     enableMobile: boolean;
     iconEle: HTMLElement
 
+    wysiwyg: WeakRef<HTMLElement>;
+
     icon: string = `<svg t="1684328935774" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1746" width="32" height="32"><path d="M180 176h-60c-4.4 0-8 3.6-8 8v656c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V184c0-4.4-3.6-8-8-8z m724 0h-60c-4.4 0-8 3.6-8 8v656c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V184c0-4.4-3.6-8-8-8zM785.3 504.3L657.7 403.6c-4.7-3.7-11.7-0.4-11.7 5.7V476H378v-62.8c0-6-7-9.4-11.7-5.7L238.7 508.3c-3.7 2.9-3.7 8.5 0 11.3l127.5 100.8c4.7 3.7 11.7 0.4 11.7-5.7V548h268v62.8c0 6 7 9.4 11.7 5.7l127.5-100.8c3.8-2.9 3.8-8.5 0.2-11.4z" p-id="1747"></path></svg>`
 
     isFullWidth: boolean;
@@ -84,6 +87,11 @@ export default class WidthPlugin extends Plugin {
         await this.load();
 
         console.log(this.enableMobile, getFrontend());
+
+        this.eventBus.on("loaded-protyle", ( {detail} ) => {
+            this.wysiwyg = new WeakRef(detail.wysiwyg.element);
+            this.updateWysiwygPadding();
+        });
 
         let forbidMobile = !this.enableMobile && getFrontend() === "mobile";
 
@@ -131,6 +139,20 @@ export default class WidthPlugin extends Plugin {
             })
         }
 
+    }
+
+    /**
+     * 更新wysiwyg的内联 padding 样式，以便让 wysiwyg 当中的 iframe 的最大宽度可以和 protyle 的宽度一致
+     */
+    updateWysiwygPadding() {
+        let ele = this.wysiwyg.deref();
+        if (ele) {
+            let parentWidth = ele.parentElement.clientWidth;
+            let padding = parentWidth * (1 - this.width / 100) / 2;
+            ele.style.setProperty('padding-left', `${padding}px`);
+            ele.style.setProperty('padding-right', `${padding}px`);
+            console.log("updateWysiwygPadding",  padding);
+        }
     }
 
     async load() {
@@ -181,5 +203,6 @@ export default class WidthPlugin extends Plugin {
     onunload() {
         console.log(this.i18n.byePlugin);
         removeStyle("plugin-width");
+        this.wysiwyg = null;
     }
 }
