@@ -87,6 +87,30 @@ export default class WidthPlugin extends Plugin {
     isFullWidth: boolean;
 
     async onload() {
+
+        try {
+            await this.init();
+        } catch (e) {
+            console.error(e);
+        }
+
+        changelog(
+            this, 'i18n/changelog.md'
+        ).then(({ Dialog }) => {
+            if (Dialog) {
+                Dialog.setFont('1rem');
+                Dialog.setSize({
+                    width: '40%',
+                    height: '25rem'
+                })
+            }
+        }).catch((e) => {
+            console.error(e);
+        });
+
+    }
+
+    async init() {
         await this.load();
 
         console.log(this.enableMobile, getFrontend());
@@ -111,7 +135,7 @@ export default class WidthPlugin extends Plugin {
 
             this.wysiwyg = new WeakRef(detail.wysiwyg.element);
             this.updateWysiwygPadding();
-            this.observer.observe(detail.wysiwyg.element, { 
+            this.observer.observe(detail.wysiwyg.element, {
                 childList: false,
                 attributes: true,
                 characterData: false,
@@ -158,20 +182,11 @@ export default class WidthPlugin extends Plugin {
             }
         });
 
-        changelog(
-            this, 'i18n/changelog.md'
-        ).then(( {Dialog} ) => {
-            if (Dialog) {
-                Dialog.setFont('1rem');
-                Dialog.setSize({
-                    width: '40%',
-                    height: '25rem'
-                })
-            }
-        }).catch((e) => {
-            console.error(e);
+        window.addEventListener('beforeunload', () => {
+            this.observer?.disconnect();
+            this.eventBus?.off("loaded-protyle", this.onLoadProtyle);
+            this.wysiwyg = null;
         });
-
     }
 
     /**
@@ -235,6 +250,5 @@ export default class WidthPlugin extends Plugin {
         this.wysiwyg = null;
         this.eventBus.off("loaded-protyle", this.onLoadProtyle);
         this.observer.disconnect();
-
     }
 }
