@@ -200,6 +200,11 @@ export default class WidthPlugin extends Plugin {
             ele.style.setProperty('padding-left', `${padding}px`);
             ele.style.setProperty('padding-right', `${padding}px`);
             // console.log("updateWysiwygPadding", padding);
+            if (padding < 16) {
+                document.documentElement.style.setProperty('--refcountRight', `-${padding}px`);
+            } else {
+                document.documentElement.style.setProperty('--refcountRight', `-16px`);
+            }
         }
     }
 

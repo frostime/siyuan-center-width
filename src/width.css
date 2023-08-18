@@ -1,6 +1,7 @@
 :root {
     --centerWidth: 70%;
     --lrwidth: calc((100% - var(--centerWidth)) / 2);
+    --refcountRight: -16px;
 }
 
 #layouts .layout__center div.protyle-content:not([data-fullwidth="true"])>div.protyle-title {
@@ -18,4 +19,7 @@ div.protyle-content:not([data-fullwidth="true"])>div.protyle-background>div.prot
     left: var(--lrwidth) !important;
 }
 
+div.protyle-content div.protyle-attr--refcount {
+    right: var(--refcountRight) !important;
+}
 
