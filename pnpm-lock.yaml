@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 dependencies:
   sy-plugin-changelog:
     specifier: ^0.0.7
@@ -35,8 +31,8 @@ devDependencies:
     specifier: ^1.62.1
     version: 1.62.1
   siyuan:
-    specifier: ^0.7.6
-    version: 0.7.6
+    specifier: ^0.7.9
+    version: 0.7.9
   svelte:
     specifier: ^3.57.0
     version: 3.59.1
@@ -805,8 +801,8 @@ packages:
     resolution: {integrity: sha512-MATJdZp8sLqDl/68LfQmbP8zKPLQNV6BIZoIgrscFDQ+RsvK/BxeDQOgyxKKoh0y/8h3BqVFnCqQ/gd+reiIXA==}
     dev: true
 
-  /siyuan@0.7.6:
-    resolution: {integrity: sha512-1UljRK3kOgTb7+gXeJiZLOX9SeR6Xbw9lshbotQIli5ycv7oCDFJMnLyUSLLOFho5Ea3hnH5xK34qACMZCv8wQ==}
+  /siyuan@0.7.9:
+    resolution: {integrity: sha512-X5olBQhfkgyPRF+d8agpcbAaFnCSvSkN3LWX7XU9jApmCfpJ/4PAmK7mKPfR1YGBpjFLRa/xTrv11BQ3hxN15Q==}
     dev: true
 
   /source-map-js@1.0.2:
@@ -983,3 +979,7 @@ packages:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
     engines: {node: '>=6'}
     dev: true
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false

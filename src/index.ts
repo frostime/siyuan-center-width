@@ -94,19 +94,19 @@ export default class WidthPlugin extends Plugin {
             console.error(e);
         }
 
-        // changelog(
-        //     this, 'i18n/changelog.md'
-        // ).then(({ Dialog }) => {
-        //     if (Dialog) {
-        //         Dialog.setFont('1rem');
-        //         Dialog.setSize({
-        //             width: '40%',
-        //             height: '25rem'
-        //         })
-        //     }
-        // }).catch((e) => {
-        //     console.error(e);
-        // });
+        changelog(
+            this, 'i18n/changelog.md'
+        ).then(({ Dialog }) => {
+            if (Dialog) {
+                Dialog.setFont('1rem');
+                Dialog.setSize({
+                    width: '40%',
+                    height: '25rem'
+                })
+            }
+        }).catch((e) => {
+            console.error(e);
+        });
 
     }
 
@@ -200,6 +200,11 @@ export default class WidthPlugin extends Plugin {
             ele.style.setProperty('padding-left', `${padding}px`);
             ele.style.setProperty('padding-right', `${padding}px`);
             // console.log("updateWysiwygPadding", padding);
+            if (padding < 16) {
+                document.documentElement.style.setProperty('--refcountRight', `-${padding}px`);
+            } else {
+                document.documentElement.style.setProperty('--refcountRight', `-16px`);
+            }
         }
     }
 
