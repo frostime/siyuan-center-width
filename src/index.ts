@@ -94,19 +94,19 @@ export default class WidthPlugin extends Plugin {
             console.error(e);
         }
 
-        // changelog(
-        //     this, 'i18n/changelog.md'
-        // ).then(({ Dialog }) => {
-        //     if (Dialog) {
-        //         Dialog.setFont('1rem');
-        //         Dialog.setSize({
-        //             width: '40%',
-        //             height: '25rem'
-        //         })
-        //     }
-        // }).catch((e) => {
-        //     console.error(e);
-        // });
+        changelog(
+            this, 'i18n/changelog.md'
+        ).then(({ Dialog }) => {
+            if (Dialog) {
+                Dialog.setFont('1rem');
+                Dialog.setSize({
+                    width: '40%',
+                    height: '25rem'
+                })
+            }
+        }).catch((e) => {
+            console.error(e);
+        });
 
     }
 
