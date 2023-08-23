@@ -32,7 +32,7 @@ class ChangeWidthDialog extends Dialog {
             content: dom,
             destroyCallback: () => {
                 plugin.save();
-                plugin.updateWysiwygPadding(plugin.wysiwyg);
+                plugin.updateAllPadding();
                 console.log("Write width", plugin.width);
             }
         });
@@ -77,7 +77,7 @@ export default class WidthPlugin extends Plugin {
     enableMobile: boolean;
     iconEle: HTMLElement
 
-    wysiwyg: WeakRef<HTMLElement>;
+    wysiwygMap: Map<string, WeakRef<HTMLElement>> = new Map();
 
     observer: MutationObserver;
     onLoadProtyle: ({ detail }) => void;
@@ -113,31 +113,45 @@ export default class WidthPlugin extends Plugin {
     async init() {
         await this.load();
 
+        this.wysiwygMap = new Map();
+
         console.log(this.enableMobile, getFrontend());
 
-        this.updateWysiwygPadding(this.wysiwyg);
+        this.updateCurrentProtyles();
 
         //思源会经常更改wysiwyg的padding，所以需要监听变化，一旦变化就重新设置
         this.observer = new MutationObserver(() => {
-            this.updateWysiwygPadding(this.wysiwyg);
+            this.updateAllPadding();
         });
 
         this.onLoadProtyle = (({ detail }) => {
+            console.groupCollapsed("Width Plugin: onLoadProtyle");
             console.log("onLoadProtyle", detail);
 
-            let oldEle = this.wysiwyg?.deref();
-            if (oldEle) {
-                this.observer.disconnect();
+            let parent = (detail.element as HTMLElement).parentElement;
+            if (!parent.classList.contains("layout-tab-container")) {
+                console.log("Not a tab document");
+                return;
             }
+            let id = (detail.element as HTMLElement).getAttribute("data-id");
+            if (!id) {
+                console.log("Not a tab document");
+                return;
+            }
+            let wysiwyg = new WeakRef(detail.wysiwyg.element);
+            this.wysiwygMap.set(id, wysiwyg);
 
-            this.wysiwyg = new WeakRef(detail.wysiwyg.element);
-            this.updateWysiwygPadding(this.wysiwyg);
+            this.pruneWysiwygMap();
+            console.log("Current WysiwygMap", this.wysiwygMap);
+
+            this.updateWysiwygPadding(wysiwyg);
             this.observer.observe(detail.wysiwyg.element, {
                 childList: false,
                 attributes: true,
                 characterData: false,
                 subtree: false
             });
+            console.groupEnd();
         }).bind(this);
 
         this.eventBus.on("loaded-protyle", this.onLoadProtyle);
@@ -182,8 +196,37 @@ export default class WidthPlugin extends Plugin {
         window.addEventListener('beforeunload', () => {
             this.observer?.disconnect();
             this.eventBus?.off("loaded-protyle", this.onLoadProtyle);
-            this.wysiwyg = null;
+            this.wysiwygMap.clear();
         });
+    }
+
+    updateCurrentProtyles() {
+
+    }
+
+    /**
+     * 清理已经不存在的 wysiwyg
+     */
+    pruneWysiwygMap() {
+        console.group("Prune Destroyed Protyle");
+        for (let [key, value] of this.wysiwygMap) {
+            if (!value.deref()) {
+                this.wysiwygMap.delete(key);
+            } else {
+                let protyle = document.querySelector(`div.protyle[data-id="${key}"]`);
+                if (!protyle) {
+                    this.wysiwygMap.delete(key);
+                    console.log("Delete", key, value);
+                }
+            }
+        }
+        console.groupEnd();
+    }
+
+    updateAllPadding() {
+        for (let [key, value] of this.wysiwygMap) {
+            this.updateWysiwygPadding(value);
+        }
     }
 
     /**
@@ -249,7 +292,7 @@ export default class WidthPlugin extends Plugin {
 
     onunload() {
         removeStyle("plugin-width");
-        this.wysiwyg = null;
+        this.wysiwygMap = null;
         this.eventBus.off("loaded-protyle", this.onLoadProtyle);
         this.observer.disconnect();
     }
