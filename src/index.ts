@@ -117,8 +117,6 @@ export default class WidthPlugin extends Plugin {
 
         console.log(this.enableMobile, getFrontend());
 
-        this.updateCurrentProtyles();
-
         //思源会经常更改wysiwyg的padding，所以需要监听变化，一旦变化就重新设置
         this.observer = new MutationObserver(() => {
             this.updateAllPadding();
@@ -136,6 +134,10 @@ export default class WidthPlugin extends Plugin {
             let id = (detail.element as HTMLElement).getAttribute("data-id");
             if (!id) {
                 console.log("Not a tab document");
+                return;
+            }
+            if (this.wysiwygMap.has(id)) {
+                console.log("Already has", id);
                 return;
             }
             let wysiwyg = new WeakRef(detail.wysiwyg.element);
@@ -200,8 +202,25 @@ export default class WidthPlugin extends Plugin {
         });
     }
 
-    updateCurrentProtyles() {
-
+    onLayoutReady() {
+        console.groupCollapsed("Width Plugin: ListenInitialProtyles");
+        let protyleList: NodeListOf<HTMLElement> = document.querySelectorAll("#layouts div.layout-tab-container > div.protyle");
+        for (let protyle of protyleList) {
+            let dataId = protyle.getAttribute("data-id");
+            if (!dataId) {
+                continue;
+            }
+            if (this.wysiwygMap.has(dataId)) {
+                console.log("Already has", dataId);
+                continue;
+            }
+            let wysiwyg = protyle.querySelector("div.protyle-wysiwyg") as HTMLElement;
+            let ref = new WeakRef(wysiwyg);
+            this.wysiwygMap.set(dataId, ref);
+            console.log("Add", dataId, ref);
+        }
+        this.updateAllPadding();
+        console.groupEnd();
     }
 
     /**
@@ -239,7 +258,7 @@ export default class WidthPlugin extends Plugin {
             
             //被关闭的 tab 的 parentElement 宽度为 0
             if (parentWidth === 0) {
-                let parentWidth = ele?.parentElement?.parentElement?.parentElement?.clientWidth;
+                parentWidth = ele?.parentElement?.parentElement?.parentElement?.clientWidth;
                 if (!parentWidth) {
                     return;
                 }
