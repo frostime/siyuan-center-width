@@ -236,6 +236,17 @@ export default class WidthPlugin extends Plugin {
         let ele = wysiwyg?.deref();
         if (ele) {
             let parentWidth = ele.parentElement.clientWidth;
+            
+            //被关闭的 tab 的 parentElement 宽度为 0
+            if (parentWidth === 0) {
+                let parentWidth = ele?.parentElement?.parentElement?.parentElement?.clientWidth;
+                if (!parentWidth) {
+                    return;
+                }
+                //测试发现 tab container 和 wysiwyg 的宽度相差 10px
+                parentWidth -= 10;
+            }
+
             let padding = parentWidth * (1 - this.width / 100) / 2;
             ele.style.setProperty('padding-left', `${padding}px`);
             ele.style.setProperty('padding-right', `${padding}px`);
