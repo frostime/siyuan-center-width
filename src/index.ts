@@ -32,7 +32,7 @@ class ChangeWidthDialog extends Dialog {
             content: dom,
             destroyCallback: () => {
                 plugin.save();
-                plugin.updateWysiwygPadding();
+                plugin.updateWysiwygPadding(plugin.wysiwyg);
                 console.log("Write width", plugin.width);
             }
         });
@@ -115,26 +115,23 @@ export default class WidthPlugin extends Plugin {
 
         console.log(this.enableMobile, getFrontend());
 
-        this.updateWysiwygPadding();
+        this.updateWysiwygPadding(this.wysiwyg);
 
         //思源会经常更改wysiwyg的padding，所以需要监听变化，一旦变化就重新设置
         this.observer = new MutationObserver(() => {
-            let ele = this.wysiwyg?.deref();
-            if (ele) {
-                // console.log(ele.style.padding);
-                this.updateWysiwygPadding();
-                // console.log(ele.style.padding);
-            }
+            this.updateWysiwygPadding(this.wysiwyg);
         });
 
         this.onLoadProtyle = (({ detail }) => {
+            console.log("onLoadProtyle", detail);
+
             let oldEle = this.wysiwyg?.deref();
             if (oldEle) {
                 this.observer.disconnect();
             }
 
             this.wysiwyg = new WeakRef(detail.wysiwyg.element);
-            this.updateWysiwygPadding();
+            this.updateWysiwygPadding(this.wysiwyg);
             this.observer.observe(detail.wysiwyg.element, {
                 childList: false,
                 attributes: true,
@@ -192,8 +189,8 @@ export default class WidthPlugin extends Plugin {
     /**
      * 更新wysiwyg的内联 padding 样式，以便让 wysiwyg 当中的 iframe 的最大宽度可以和 protyle 的宽度一致
      */
-    updateWysiwygPadding() {
-        let ele = this.wysiwyg?.deref();
+    updateWysiwygPadding(wysiwyg: WeakRef<HTMLElement>) {
+        let ele = wysiwyg?.deref();
         if (ele) {
             let parentWidth = ele.parentElement.clientWidth;
             let padding = parentWidth * (1 - this.width / 100) / 2;
