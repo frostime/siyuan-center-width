@@ -4,21 +4,52 @@ import { changelog } from "sy-plugin-changelog";
 
 import widthStyle from "./width.css?inline";
 
+function computeCSSValue(valueExpression) {
+    // 创建一个临时元素
+    var tempElement = document.createElement('div');
+    tempElement.style.display = 'none';
+    document.body.appendChild(tempElement);
+  
+    // 应用 CSS 值表达式到临时元素
+    tempElement.style.setProperty('width', valueExpression);
+  
+    // 获取计算样式值
+    var computedStyle = window.getComputedStyle(tempElement);
+    var computedValue = computedStyle.getPropertyValue('width');
+  
+    // 移除临时元素
+    document.body.removeChild(tempElement);
+  
+    // 返回计算得到的值
+    return computedValue;
+  }
+
 class ChangeWidthDialog extends Dialog {
 
     value: number;
 
     constructor(plugin: WidthPlugin) {
         let dom = `
-        <div id="plugin-width__setting">
-            <div style="padding-bottom: 1rem">
-                40%
-                <input
-                    class="b3-slider fn__size200 b3-tooltips b3-tooltips__s"
-                    max="100" min="40" step="1" type="range" value="${plugin.width}"
-                    aria-label="${plugin.width}%" id=""
-                />
-                100%
+        <div style="display: flex; flex-direction: column; height: 100%;" id="plugin-width__setting">
+            <div style="display: flex; flex-direction: column; flex: 1;">
+                <div class="fn__flex" style="padding-bottom: 1rem">
+                    40%
+                    <input
+                        class="fn__flex-1 b3-slider b3-tooltips b3-tooltips__s"
+                        max="100" min="40" step="1" type="range" value="${plugin.width}"
+                        aria-label="${plugin.width}%" id="widthplugin-adjust-width"
+                    />
+                    100%
+                </div>
+                <div class="fn__flex" style="padding-bottom: 1rem">
+                    左移
+                    <input
+                        class="fn__flex-1 b3-slider"
+                        max="50" min="-50" step="1" type="range" value="${plugin.offset}"
+                        id="widthplugin-adjust-offset"
+                    />
+                    右移
+                </div>
             </div>
             <label class="fn__flex">
                 <div class="fn__flex-1">${plugin.i18n.setEnableMobile}</div> 
@@ -41,12 +72,18 @@ class ChangeWidthDialog extends Dialog {
         body.style.padding = "1rem";
         header.style.textAlign = "center";
 
-        const inputCenterWidth: HTMLInputElement = this.element.querySelector('input.b3-slider');
+        const inputCenterWidth: HTMLInputElement = this.element.querySelector('input#widthplugin-adjust-width');
         inputCenterWidth.addEventListener("input", (e) => {
             plugin.width = parseInt((e.target as HTMLInputElement).value);
             header.innerText = `${plugin.i18n.title}: ${plugin.width}%`;
             inputCenterWidth.setAttribute("aria-label", `${plugin.width}%`);
             document.documentElement.style.setProperty('--centerWidth', `${plugin.width}%`);
+        });
+
+        const inputOffset: HTMLInputElement = this.element.querySelector('input#widthplugin-adjust-offset');
+        inputOffset.addEventListener("input", (e) => {
+            plugin.offset = parseInt((e.target as HTMLInputElement).value);
+            document.documentElement.style.setProperty('--centerOffset', `${plugin.offset}%`);
         });
 
         const inputEnableMobile: HTMLInputElement = this.element.querySelector('input.b3-switch');
@@ -74,6 +111,8 @@ function removeStyle(id: string) {
 export default class WidthPlugin extends Plugin {
 
     width: number;
+    offset: number;
+
     enableMobile: boolean;
     iconEle: HTMLElement
 
@@ -168,6 +207,7 @@ export default class WidthPlugin extends Plugin {
 
 
         document.documentElement.style.setProperty('--centerWidth', `${this.width}%`);
+        document.documentElement.style.setProperty('--centerOffset', `${this.offset}%`);
         this.iconEle = this.addTopBar({
             icon: this.icon,
             title: this.i18n.title,
@@ -283,11 +323,12 @@ export default class WidthPlugin extends Plugin {
         console.log("Load config", config);
         if (config) {
             // this.width = result;
-            this.data['config'] = config;
-            this.width = config.width;
-            this.enableMobile = config.enableMobile;
+            this.width = config?.width ?? 70;
+            this.offset = config?.offset ?? 0;
+            this.enableMobile = config?.enableMobile ?? false;
         } else {
             this.width = 70;
+            this.offset = 0;
             this.enableMobile = false;
             this.save();
         }
@@ -296,6 +337,7 @@ export default class WidthPlugin extends Plugin {
     async save() {
         this.data['config'] = {
             width: this.width,
+            offset: this.offset,
             enableMobile: this.enableMobile
         };
         await this.saveData("config", this.data['config']);
