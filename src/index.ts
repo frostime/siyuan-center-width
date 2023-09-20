@@ -115,7 +115,7 @@ export default class WidthPlugin extends Plugin {
 
         this.wysiwygMap = new Map();
 
-        console.log(this.enableMobile, getFrontend());
+        console.debug(this.enableMobile, getFrontend());
 
         //思源会经常更改wysiwyg的padding，所以需要监听变化，一旦变化就重新设置
         this.observer = new MutationObserver(() => {
@@ -123,28 +123,27 @@ export default class WidthPlugin extends Plugin {
         });
 
         this.onLoadProtyle = (({ detail }) => {
-            console.groupCollapsed("Width Plugin: onLoadProtyle");
-            console.log("onLoadProtyle", detail);
+            console.debug("onLoadProtyle", detail);
 
             let parent = (detail.element as HTMLElement).parentElement;
             if (!parent.classList.contains("layout-tab-container")) {
-                console.log("Not a tab document");
+                console.debug("Not a tab document");
                 return;
             }
             let id = (detail.element as HTMLElement).getAttribute("data-id");
             if (!id) {
-                console.log("Not a tab document");
+                console.debug("Not a tab document");
                 return;
             }
             if (this.wysiwygMap.has(id)) {
-                console.log("Already has", id);
+                console.debug("Already has", id);
                 return;
             }
             let wysiwyg = new WeakRef(detail.wysiwyg.element);
             this.wysiwygMap.set(id, wysiwyg);
 
             this.pruneWysiwygMap();
-            console.log("Current WysiwygMap", this.wysiwygMap);
+            console.debug("Current WysiwygMap", this.wysiwygMap);
 
             this.updateWysiwygPadding(wysiwyg);
             this.observer.observe(detail.wysiwyg.element, {
@@ -153,7 +152,6 @@ export default class WidthPlugin extends Plugin {
                 characterData: false,
                 subtree: false
             });
-            console.groupEnd();
         }).bind(this);
 
         this.eventBus.on("loaded-protyle", this.onLoadProtyle);
@@ -227,7 +225,7 @@ export default class WidthPlugin extends Plugin {
      * 清理已经不存在的 wysiwyg
      */
     pruneWysiwygMap() {
-        console.group("Prune Destroyed Protyle");
+        console.debug("Prune Destroyed Protyle");
         for (let [key, value] of this.wysiwygMap) {
             if (!value.deref()) {
                 this.wysiwygMap.delete(key);
@@ -235,11 +233,10 @@ export default class WidthPlugin extends Plugin {
                 let protyle = document.querySelector(`div.protyle[data-id="${key}"]`);
                 if (!protyle) {
                     this.wysiwygMap.delete(key);
-                    console.log("Delete", key, value);
+                    console.debug("Delete", key, value);
                 }
             }
         }
-        console.groupEnd();
     }
 
     updateAllPadding() {
@@ -299,7 +296,7 @@ export default class WidthPlugin extends Plugin {
             enableMobile: this.enableMobile
         };
         await this.saveData("config", this.data['config']);
-        console.log("Save config", this.data['config']);
+        console.debug("Save config", this.data['config']);
     }
 
     private checkFullWidth() {
