@@ -131,19 +131,18 @@ export default class WidthPlugin extends Plugin {
                 console.debug("Not a tab document");
                 return;
             }
-            let id = (detail.element as HTMLElement).getAttribute("data-id");
+
+            let id = detail?.id;
             if (!id) {
-                console.debug("Not a tab document");
                 return;
             }
+            console.debug(`Load Protyle with ID = ${id}`)
             if (this.wysiwygMap.has(id)) {
-                console.debug("Already has", id);
                 return;
             }
             let wysiwyg = new WeakRef(detail.wysiwyg.element);
             this.wysiwygMap.set(id, wysiwyg);
 
-            this.pruneWysiwygMap();
             console.debug("Current WysiwygMap", this.wysiwygMap);
 
             this.updateWysiwygPadding(wysiwyg);
@@ -156,11 +155,20 @@ export default class WidthPlugin extends Plugin {
         }).bind(this);
 
         this.onDestroyProtyle = (({ detail }) => {
+            console.debug("onDestroyProtyle", detail);
+
+            let id = detail?.protyle?.id;
+            console.debug("Destroy Protyle ID = ", id);
+            if (this.wysiwygMap.has(id)) {
+                this.wysiwygMap.delete(id);
+                console.debug("Current WysiwygMap", this.wysiwygMap);
+            }
 
         }).bind(this);
 
         this.eventBus.on("loaded-protyle", this.onLoadProtyle);
-        
+        this.eventBus.on("destroy-protyle", this.onDestroyProtyle);
+
 
         let forbidMobile = !this.enableMobile && getFrontend() === "mobile";
 
@@ -202,6 +210,7 @@ export default class WidthPlugin extends Plugin {
         window.addEventListener('beforeunload', () => {
             this.observer?.disconnect();
             this.eventBus?.off("loaded-protyle", this.onLoadProtyle);
+            this.eventBus?.off("destroy-protyle", this.onDestroyProtyle);
             this.wysiwygMap.clear();
         });
     }
@@ -227,27 +236,16 @@ export default class WidthPlugin extends Plugin {
         console.groupEnd();
     }
 
-    /**
-     * 清理已经不存在的 wysiwyg
-     */
-    pruneWysiwygMap() {
-        console.debug("Prune Destroyed Protyle");
+    updateAllPadding() {
+        let faildKeys: string[] = [];
         for (let [key, value] of this.wysiwygMap) {
-            if (!value.deref()) {
-                this.wysiwygMap.delete(key);
-            } else {
-                let protyle = document.querySelector(`div.protyle[data-id="${key}"]`);
-                if (!protyle) {
-                    this.wysiwygMap.delete(key);
-                    console.debug("Delete", key, value);
-                }
+            let flag = this.updateWysiwygPadding(value);
+            if (!flag) {
+                faildKeys.push(key);
             }
         }
-    }
-
-    updateAllPadding() {
-        for (let [key, value] of this.wysiwygMap) {
-            this.updateWysiwygPadding(value);
+        for (let key of faildKeys) {
+            this.wysiwygMap.delete(key);
         }
     }
 
@@ -287,7 +285,9 @@ export default class WidthPlugin extends Plugin {
             } else {
                 document.documentElement.style.setProperty('--refcountRight', `-16px`);
             }
+            return true;
         }
+        return false;
     }
 
     async load() {
@@ -336,6 +336,7 @@ export default class WidthPlugin extends Plugin {
         removeStyle("plugin-width");
         this.wysiwygMap = null;
         this.eventBus.off("loaded-protyle", this.onLoadProtyle);
+        this.eventBus?.off("destroy-protyle", this.onDestroyProtyle);
         this.observer.disconnect();
     }
 }
