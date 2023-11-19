@@ -1,6 +1,6 @@
-import { Plugin, Dialog, showMessage, confirm, getFrontend } from "siyuan";
+import { Plugin, Dialog, showMessage, confirm, getFrontend, IEventBusMap } from "siyuan";
 
-import { changelog } from "sy-plugin-changelog";
+// import { changelog } from "sy-plugin-changelog";
 
 import widthStyle from "./width.css?inline";
 
@@ -71,6 +71,11 @@ function removeStyle(id: string) {
     }
 }
 
+const InMiniWindow = () => {
+    const body: HTMLElement = document.querySelector('body');
+    return body.classList.contains('body--window');
+}
+
 export default class WidthPlugin extends Plugin {
 
     width: number;
@@ -80,7 +85,7 @@ export default class WidthPlugin extends Plugin {
     wysiwygMap: Map<string, WeakRef<HTMLElement>> = new Map();
 
     observer: MutationObserver;
-    onLoadProtyle: ({ detail }) => void;
+    onLoadProtyle: ({ detail }: CustomEvent<IEventBusMap['loaded-protyle-static']>) => void;
     onDestroyProtyle: ({ detail }) => void;
 
     icon: string = `<svg t="1684328935774" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1746" width="32" height="32"><path d="M180 176h-60c-4.4 0-8 3.6-8 8v656c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V184c0-4.4-3.6-8-8-8z m724 0h-60c-4.4 0-8 3.6-8 8v656c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V184c0-4.4-3.6-8-8-8zM785.3 504.3L657.7 403.6c-4.7-3.7-11.7-0.4-11.7 5.7V476H378v-62.8c0-6-7-9.4-11.7-5.7L238.7 508.3c-3.7 2.9-3.7 8.5 0 11.3l127.5 100.8c4.7 3.7 11.7 0.4 11.7-5.7V548h268v62.8c0 6 7 9.4 11.7 5.7l127.5-100.8c3.8-2.9 3.8-8.5 0.2-11.4z" p-id="1747"></path></svg>`
@@ -114,25 +119,44 @@ export default class WidthPlugin extends Plugin {
     async init() {
         await this.load();
 
-        this.wysiwygMap = new Map();
-
         console.debug(this.enableMobile, getFrontend());
+
+        //1. 如果是在移动端模式下，且没有开启移动端模式，则不加载
+        let forbidMobile = !this.enableMobile && getFrontend() === "mobile";
+        if (forbidMobile) {
+            return;
+        }
+
+        //如果是在桌面小窗模式下，则默认定死宽度为 92%, 后面有空再优化
+        if (InMiniWindow()) {
+            insertStyle("plugin-width", widthStyle);
+            document.documentElement.style.setProperty('--centerWidth', `92%`);
+            return;
+        }
+
+        this.wysiwygMap = new Map();
 
         //思源会经常更改wysiwyg的padding，所以需要监听变化，一旦变化就重新设置
         this.observer = new MutationObserver(() => {
             this.updateAllPadding();
         });
 
-        this.onLoadProtyle = (({ detail }) => {
+        this.onLoadProtyle = (({ detail }: CustomEvent<IEventBusMap['loaded-protyle-static']>) => {
             console.debug("onLoadProtyle", detail);
-
-            let parent = (detail.element as HTMLElement).parentElement;
+            const protyle = detail?.protyle;
+            let parent = (protyle.element as HTMLElement).parentElement;
+            //考虑到性能问题，只对主编辑器进行监听
             if (!parent.classList.contains("layout-tab-container")) {
                 console.debug("Not a tab document");
                 return;
             }
+            const layout = parent?.parentElement?.parentElement?.parentElement;
+            if (layout === undefined || !layout.classList.contains("layout__center")) {
+                console.debug("Not center layout");
+                return;
+            }
 
-            let id = detail?.id;
+            let id = protyle?.id;
             if (!id) {
                 return;
             }
@@ -140,13 +164,13 @@ export default class WidthPlugin extends Plugin {
             if (this.wysiwygMap.has(id)) {
                 return;
             }
-            let wysiwyg = new WeakRef(detail.wysiwyg.element);
+            let wysiwyg = new WeakRef(protyle.wysiwyg.element);
             this.wysiwygMap.set(id, wysiwyg);
 
             console.debug("Current WysiwygMap", this.wysiwygMap);
 
             this.updateWysiwygPadding(wysiwyg);
-            this.observer.observe(detail.wysiwyg.element, {
+            this.observer.observe(protyle.wysiwyg.element, {
                 childList: false,
                 attributes: true,
                 characterData: false,
@@ -166,17 +190,10 @@ export default class WidthPlugin extends Plugin {
 
         }).bind(this);
 
-        this.eventBus.on("loaded-protyle", this.onLoadProtyle);
+        this.eventBus.on("loaded-protyle-static", this.onLoadProtyle);
         this.eventBus.on("destroy-protyle", this.onDestroyProtyle);
 
-
-        let forbidMobile = !this.enableMobile && getFrontend() === "mobile";
-
-        if (forbidMobile) {
-
-        } else {
-            insertStyle("plugin-width", widthStyle);
-        }
+        insertStyle("plugin-width", widthStyle);
 
 
         document.documentElement.style.setProperty('--centerWidth', `${this.width}%`);
@@ -209,7 +226,7 @@ export default class WidthPlugin extends Plugin {
 
         window.addEventListener('beforeunload', () => {
             this.observer?.disconnect();
-            this.eventBus?.off("loaded-protyle", this.onLoadProtyle);
+            this.eventBus?.off("loaded-protyle-static", this.onLoadProtyle);
             this.eventBus?.off("destroy-protyle", this.onDestroyProtyle);
             this.wysiwygMap.clear();
         });
@@ -335,7 +352,7 @@ export default class WidthPlugin extends Plugin {
     onunload() {
         removeStyle("plugin-width");
         this.wysiwygMap = null;
-        this.eventBus.off("loaded-protyle", this.onLoadProtyle);
+        this.eventBus.off("loaded-protyle-static", this.onLoadProtyle);
         this.eventBus?.off("destroy-protyle", this.onDestroyProtyle);
         this.observer.disconnect();
     }
