@@ -150,6 +150,11 @@ export default class WidthPlugin extends Plugin {
                 console.debug("Not a tab document");
                 return;
             }
+            const layout = parent?.parentElement?.parentElement?.parentElement;
+            if (layout === undefined || !layout.classList.contains("layout__center")) {
+                console.debug("Not center layout");
+                return;
+            }
 
             let id = protyle?.id;
             if (!id) {

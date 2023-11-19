@@ -4,6 +4,7 @@
     --refcountRight: -16px;
 }
 
+/* #layouts 表示只对中央编辑器生效 */
 #layouts div.protyle-content:not([data-fullwidth="true"])>div.protyle-title {
     margin-left: var(--lrwidth) !important;
     margin-right: var(--lrwidth) !important;
@@ -15,11 +16,11 @@
 }
 
 
-div.protyle-content:not([data-fullwidth="true"])>div.protyle-background>div.protyle-background__iconw {
+#layouts div.protyle-content:not([data-fullwidth="true"])>div.protyle-background>div.protyle-background__iconw {
     left: var(--lrwidth) !important;
 }
 
-div.protyle-content div.protyle-attr--refcount {
+#layouts div.protyle-content div.protyle-attr--refcount {
     right: var(--refcountRight) !important;
 }
 
