@@ -4,12 +4,12 @@
     --refcountRight: -16px;
 }
 
-#layouts .layout__center div.protyle-content:not([data-fullwidth="true"])>div.protyle-title {
+#layouts div.protyle-content:not([data-fullwidth="true"])>div.protyle-title {
     margin-left: var(--lrwidth) !important;
     margin-right: var(--lrwidth) !important;
 }
 
-#layouts .layout__center div.protyle-content:not([data-fullwidth="true"])>div.protyle-wysiwyg {
+#layouts div.protyle-content:not([data-fullwidth="true"])>div.protyle-wysiwyg {
     padding-left: var(--lrwidth) !important;
     padding-right: var(--lrwidth) !important;
 }

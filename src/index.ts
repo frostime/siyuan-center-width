@@ -1,6 +1,6 @@
 import { Plugin, Dialog, showMessage, confirm, getFrontend } from "siyuan";
 
-import { changelog } from "sy-plugin-changelog";
+// import { changelog } from "sy-plugin-changelog";
 
 import widthStyle from "./width.css?inline";
 
@@ -71,6 +71,11 @@ function removeStyle(id: string) {
     }
 }
 
+const InMiniWindow = () => {
+    const body: HTMLElement = document.querySelector('body');
+    return body.classList.contains('body--window');
+}
+
 export default class WidthPlugin extends Plugin {
 
     width: number;
@@ -114,9 +119,22 @@ export default class WidthPlugin extends Plugin {
     async init() {
         await this.load();
 
-        this.wysiwygMap = new Map();
-
         console.debug(this.enableMobile, getFrontend());
+
+        //1. 如果是在移动端模式下，且没有开启移动端模式，则不加载
+        let forbidMobile = !this.enableMobile && getFrontend() === "mobile";
+        if (forbidMobile) {
+            return;
+        }
+
+        //如果是在桌面小窗模式下，则默认定死宽度为 92%, 后面有空再优化
+        if (InMiniWindow()) {
+            insertStyle("plugin-width", widthStyle);
+            document.documentElement.style.setProperty('--centerWidth', `92%`);
+            return;
+        }
+
+        this.wysiwygMap = new Map();
 
         //思源会经常更改wysiwyg的padding，所以需要监听变化，一旦变化就重新设置
         this.observer = new MutationObserver(() => {
@@ -169,14 +187,7 @@ export default class WidthPlugin extends Plugin {
         this.eventBus.on("loaded-protyle", this.onLoadProtyle);
         this.eventBus.on("destroy-protyle", this.onDestroyProtyle);
 
-
-        let forbidMobile = !this.enableMobile && getFrontend() === "mobile";
-
-        if (forbidMobile) {
-
-        } else {
-            insertStyle("plugin-width", widthStyle);
-        }
+        insertStyle("plugin-width", widthStyle);
 
 
         document.documentElement.style.setProperty('--centerWidth', `${this.width}%`);
