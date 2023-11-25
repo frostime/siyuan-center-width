@@ -4,23 +4,23 @@
     --refcountRight: -16px;
 }
 
-/* #layouts 表示只对中央编辑器生效 */
-#layouts div.protyle-content:not([data-fullwidth="true"])>div.protyle-title {
+/* #layouts layout__center 表示只对中央编辑器生效, 不对 dock 栏目的 protyle 生效 */
+#layouts div.layout__center div.protyle-content:not([data-fullwidth="true"])>div.protyle-title {
     margin-left: var(--lrwidth) !important;
     margin-right: var(--lrwidth) !important;
 }
 
-#layouts div.protyle-content:not([data-fullwidth="true"])>div.protyle-wysiwyg {
+#layouts div.layout__center div.protyle-content:not([data-fullwidth="true"])>div.protyle-wysiwyg {
     padding-left: var(--lrwidth) !important;
     padding-right: var(--lrwidth) !important;
 }
 
 
-#layouts div.protyle-content:not([data-fullwidth="true"])>div.protyle-background>div.protyle-background__iconw {
+#layouts div.layout__center div.protyle-content:not([data-fullwidth="true"])>div.protyle-background>div.protyle-background__iconw {
     left: var(--lrwidth) !important;
 }
 
-#layouts div.protyle-content div.protyle-attr--refcount {
+#layouts div.layout__center div.protyle-content div.protyle-attr--refcount {
     right: var(--refcountRight) !important;
 }
 
