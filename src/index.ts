@@ -4,6 +4,19 @@ import { Plugin, Dialog, showMessage, confirm, getFrontend, IEventBusMap } from 
 
 import widthStyle from "./width.css?inline";
 
+
+function throttle<T extends Function>(func: T, wait: number = 500){
+    let previous = 0;
+    return function(){
+        let now = Date.now(), context = this, args = [...arguments];
+        if(now - previous > wait){
+            func.apply(context, args);
+            previous = now;
+        }
+    }
+}
+
+
 class ChangeWidthDialog extends Dialog {
 
     value: number;
@@ -85,6 +98,7 @@ export default class WidthPlugin extends Plugin {
     wysiwygMap: Map<string, WeakRef<HTMLElement>> = new Map();
 
     observer: MutationObserver;
+    updateAllPaddingThrottled: () => void;
     onLoadProtyle: ({ detail }: CustomEvent<IEventBusMap['loaded-protyle-static']>) => void;
     onDestroyProtyle: ({ detail }) => void;
 
@@ -137,8 +151,10 @@ export default class WidthPlugin extends Plugin {
         this.wysiwygMap = new Map();
 
         //思源会经常更改wysiwyg的padding，所以需要监听变化，一旦变化就重新设置
+        //updateAllPadding 本身又会触发 MutationObserver，所以需要节流
+        this.updateAllPaddingThrottled = throttle(this.updateAllPadding.bind(this), 2000);
         this.observer = new MutationObserver(() => {
-            this.updateAllPadding();
+            this.updateAllPaddingThrottled();
         });
 
         this.onLoadProtyle = (({ detail }: CustomEvent<IEventBusMap['loaded-protyle-static']>) => {
@@ -170,6 +186,7 @@ export default class WidthPlugin extends Plugin {
             console.debug("Current WysiwygMap", this.wysiwygMap);
 
             this.updateWysiwygPadding(wysiwyg);
+            //如果当前聚焦的主编辑器宽度变了, 就同步更改所有 protyle 的 padding
             this.observer.observe(protyle.wysiwyg.element, {
                 childList: false,
                 attributes: true,
