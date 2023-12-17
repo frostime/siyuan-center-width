@@ -3,7 +3,7 @@
  * @Author       : frostime
  * @Date         : 2023-12-17 18:31:31
  * @FilePath     : /src/libs/dialog.ts
- * @LastEditTime : 2023-12-17 20:21:28
+ * @LastEditTime : 2023-12-17 20:29:52
  * @Description  : 
  */
 
@@ -29,11 +29,6 @@ export class ChangeWidthDialog extends Dialog {
                 />
                 100%
             </div>
-            <label class="fn__flex">
-                <div class="fn__flex-1">${plugin.i18n.setEnableMobile}</div> 
-                <span class="fn__space"></span>
-                <input class="b3-switch fn__flex-center" type="checkbox">
-            </label>
         </div>
         `
         super({
@@ -57,13 +52,6 @@ export class ChangeWidthDialog extends Dialog {
             header.innerText = `${plugin.i18n.title}: ${width}%`;
             inputCenterWidth.setAttribute("aria-label", `${width}%`);
             document.documentElement.style.setProperty('--centerWidth', `${width}%`);
-        });
-
-        const inputEnableMobile: HTMLInputElement = this.element.querySelector('input.b3-switch');
-        inputEnableMobile.checked = enableMobile;
-        inputEnableMobile.addEventListener("change", (e) => {
-            let enableMobile = (e.target as HTMLInputElement).checked;
-            plugin.settingUtils.set("enableMobile", enableMobile);
         });
     }
 }
