@@ -19,3 +19,15 @@
 
 
 ![](asset/width-plugin.png)
+
+## Two Running Modes
+
+- Simple Mode: CSS Styling Only
+
+  - Pros: Very lightweight, minimal performance impact.
+  - Cons: Does not apply to iframes and widgets.
+
+- Complex Mode: CSS + JS
+
+  - Pros: Applies to iframes and widgets.
+  - Cons: Higher performance overhead.
