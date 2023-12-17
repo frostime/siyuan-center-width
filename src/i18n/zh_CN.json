@@ -3,5 +3,21 @@
   "bye": "不打扰了, 再见",
   "fullWidth": "请在设置中关闭自适应宽度后使用本插件",
   "setEnableMobile": "是否则移动端生效?",
-  "disableOnMobile": "插件功能已在移动端禁用"
+  "disableOnMobile": "插件功能已在移动端禁用",
+  "setting": {
+    "width": {
+      "title": "更改编辑器宽度",
+      "description": "按照百分比设置宽度"
+    },
+    "enableMobile": {
+      "title": "移动端生效",
+      "description": "如果开启，移动端也会生效"
+    },
+    "mode": {
+      "title": "插件模式 (重启后生效)",
+      "description": "简单模式: 只启用 css 模式, 开销小但是对 iframe 不生效<br/>高级模式: 同时启用 js 监听编辑器, 开销大但是对 iframe 生效",
+      "simple": "简单模式",
+      "advanced": "高级模式"
+    }
+  }
 }

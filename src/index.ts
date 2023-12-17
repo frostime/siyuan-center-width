@@ -62,6 +62,7 @@ export default class WidthPlugin extends Plugin {
 
         const enableMobile = this.settingUtils.get('enableMobile');
         const width = this.settingUtils.get('width');
+        const mode = this.settingUtils.get('mode');
 
         console.debug(enableMobile, getFrontend());
 
@@ -77,6 +78,42 @@ export default class WidthPlugin extends Plugin {
             document.documentElement.style.setProperty('--centerWidth', `94%`);
             return;
         }
+
+        insertStyle("plugin-width", widthStyle);
+
+        document.documentElement.style.setProperty('--centerWidth', `${width}%`);
+        this.iconEle = this.addTopBar({
+            icon: this.icon,
+            title: this.i18n.title,
+            position: "left",
+            callback: () => {
+                if (forbidMobile) {
+                    showMessage(this.i18n.disableOnMobile, 2000, 'info');
+                    return;
+                }
+
+                let isFullwidth = this.checkFullWidth();
+                //开启且没有设置过
+                if (isFullwidth === null && this.isFullWidth === undefined) {
+                    return;
+                } else if (this.isFullWidth) {
+                    isFullwidth = this.isFullWidth;
+                }
+                this.isFullWidth = isFullwidth;
+
+                if (isFullwidth) {
+                    confirm(this.i18n.title, this.i18n.fullWidth);
+                    return;
+                }
+                new ChangeWidthDialog(this);
+            }
+        });
+
+        if (mode === 'simple') {
+            return;
+        }
+
+        console.debug("Width Plugin: Bind JS Event");
 
         this.wysiwygMap = new Map();
 
@@ -139,37 +176,6 @@ export default class WidthPlugin extends Plugin {
 
         this.eventBus.on("loaded-protyle-static", this.onLoadProtyle);
         this.eventBus.on("destroy-protyle", this.onDestroyProtyle);
-
-        insertStyle("plugin-width", widthStyle);
-
-
-        document.documentElement.style.setProperty('--centerWidth', `${width}%`);
-        this.iconEle = this.addTopBar({
-            icon: this.icon,
-            title: this.i18n.title,
-            position: "left",
-            callback: () => {
-                if (forbidMobile) {
-                    showMessage(this.i18n.disableOnMobile, 2000, 'info');
-                    return;
-                }
-
-                let isFullwidth = this.checkFullWidth();
-                //开启且没有设置过
-                if (isFullwidth === null && this.isFullWidth === undefined) {
-                    return;
-                } else if (this.isFullWidth) {
-                    isFullwidth = this.isFullWidth;
-                }
-                this.isFullWidth = isFullwidth;
-
-                if (isFullwidth) {
-                    confirm(this.i18n.title, this.i18n.fullWidth);
-                    return;
-                }
-                new ChangeWidthDialog(this);
-            }
-        });
 
         window.addEventListener('beforeunload', () => {
             this.observer?.disconnect();
@@ -258,16 +264,16 @@ export default class WidthPlugin extends Plugin {
     async initConfig() {
 
         this.settingUtils = new SettingUtils(this, 'config', async (data) => {
-            console.debug("Save config", data);
             document.documentElement.style.setProperty('--centerWidth', `${data.width}%`);
+            this.settingUtils.save();
 
-        }, '500px', '300px');
+        }, '700px', '500px');
         this.settingUtils.addItem({
             key: 'width',
             value: 70,
             type: 'slider',
-            title: this.i18n.title,
-            description: '按照百分比设置宽度',
+            title: this.i18n.setting.width.title,
+            description: this.i18n.setting.width.description,
             slider: {
                 min: 40,
                 max: 100,
@@ -278,12 +284,22 @@ export default class WidthPlugin extends Plugin {
             key: 'enableMobile',
             value: false,
             type: 'checkbox',
-            title: this.i18n.setEnableMobile,
-            description: '如果开启，移动端也会生效 ',
+            title: this.i18n.setting.enableMobile.title,
+            description: this.i18n.setting.enableMobile.description,
+        });
+        this.settingUtils.addItem({
+            key: 'mode',
+            value: 'simple',
+            type: 'select',
+            title: this.i18n.setting.mode.title,
+            description: this.i18n.setting.mode.description,
+            options:{
+                simple: this.i18n.setting.mode.simple,
+                advanced: this.i18n.setting.mode.advanced
+            }
         });
 
-        const config = await this.settingUtils.load();
-        console.debug("Load config", config);
+        await this.settingUtils.load();
     }
 
     private checkFullWidth() {

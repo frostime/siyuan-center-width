@@ -3,5 +3,21 @@
   "bye": "I hide myself, bye!",
   "fullWidth": "Please disable full width mode in setting before using this plugin.",
   "setEnableMobile": "Enable in mobile device?",
-  "disableOnMobile": "The plugin functionality has been disabled on mobile devices."
+  "disableOnMobile": "The plugin functionality has been disabled on mobile devices.",
+  "setting": {
+    "width": {
+      "title": "Set width",
+      "description": "Change center editor width in percentage."
+    },
+    "enableMobile": {
+      "title": "Enable in mobile device",
+      "description": "Enable in mobile device"
+    },
+    "mode": {
+      "title": "Plugin Mode (Effective after Restart)",
+      "description": "Simple Mode: Only enables CSS mode, low overhead but does not work with iframes.<br/>Advanced Mode: Simultaneously enables JavaScript monitoring of the editor, high overhead but works with iframes.",
+      "simple": "Simple Mode",
+      "advanced": "Advanced Mode"
+    }
+  }
 }
