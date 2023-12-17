@@ -15,8 +15,6 @@ const InMiniWindow = () => {
 
 export default class WidthPlugin extends Plugin {
 
-    width: number;
-    enableMobile: boolean;
     iconEle: HTMLElement
 
     wysiwygMap: Map<string, WeakRef<HTMLElement>> = new Map();
@@ -31,6 +29,9 @@ export default class WidthPlugin extends Plugin {
     isFullWidth: boolean;
 
     settingUtils: SettingUtils;
+    // width: number;
+    // enableMobile: boolean;
+
 
     async onload() {
 
@@ -59,10 +60,13 @@ export default class WidthPlugin extends Plugin {
     async init() {
         await this.initConfig();
 
-        console.debug(this.enableMobile, getFrontend());
+        const enableMobile = this.settingUtils.get('enableMobile');
+        const width = this.settingUtils.get('width');
+
+        console.debug(enableMobile, getFrontend());
 
         //1. 如果是在移动端模式下，且没有开启移动端模式，则不加载
-        let forbidMobile = !this.enableMobile && getFrontend() === "mobile";
+        let forbidMobile = !enableMobile && getFrontend() === "mobile";
         if (forbidMobile) {
             return;
         }
@@ -139,7 +143,7 @@ export default class WidthPlugin extends Plugin {
         insertStyle("plugin-width", widthStyle);
 
 
-        document.documentElement.style.setProperty('--centerWidth', `${this.width}%`);
+        document.documentElement.style.setProperty('--centerWidth', `${width}%`);
         this.iconEle = this.addTopBar({
             icon: this.icon,
             title: this.i18n.title,
@@ -236,7 +240,8 @@ export default class WidthPlugin extends Plugin {
                 parentWidth -= 10;
             }
 
-            let padding = parentWidth * (1 - this.width / 100) / 2;
+            const width = this.settingUtils.get('width');
+            let padding = parentWidth * (1 - width / 100) / 2;
             ele.style.setProperty('padding-left', `${padding}px`);
             ele.style.setProperty('padding-right', `${padding}px`);
             // console.log("updateWysiwygPadding", padding);
@@ -252,27 +257,33 @@ export default class WidthPlugin extends Plugin {
 
     async initConfig() {
 
-        let config = await this.loadData("config");
-        console.log("Load config", config);
-        if (config) {
-            // this.width = result;
-            this.data['config'] = config;
-            this.width = config.width;
-            this.enableMobile = config.enableMobile;
-        } else {
-            this.width = 70;
-            this.enableMobile = false;
-            this.save();
-        }
-    }
+        this.settingUtils = new SettingUtils(this, 'config', async (data) => {
+            console.debug("Save config", data);
+            document.documentElement.style.setProperty('--centerWidth', `${data.width}%`);
 
-    async save() {
-        this.data['config'] = {
-            width: this.width,
-            enableMobile: this.enableMobile
-        };
-        await this.saveData("config", this.data['config']);
-        console.debug("Save config", this.data['config']);
+        }, '500px', '300px');
+        this.settingUtils.addItem({
+            key: 'width',
+            value: 70,
+            type: 'slider',
+            title: this.i18n.title,
+            description: '按照百分比设置宽度',
+            slider: {
+                min: 40,
+                max: 100,
+                step: 1
+            }
+        });
+        this.settingUtils.addItem({
+            key: 'enableMobile',
+            value: false,
+            type: 'checkbox',
+            title: this.i18n.setEnableMobile,
+            description: '如果开启，移动端也会生效 ',
+        });
+
+        const config = await this.settingUtils.load();
+        console.debug("Load config", config);
     }
 
     private checkFullWidth() {
@@ -299,5 +310,6 @@ export default class WidthPlugin extends Plugin {
         this.eventBus.off("loaded-protyle-static", this.onLoadProtyle);
         this.eventBus?.off("destroy-protyle", this.onDestroyProtyle);
         this.observer.disconnect();
+        this.settingUtils.save();
     }
 }

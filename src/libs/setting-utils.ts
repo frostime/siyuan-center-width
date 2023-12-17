@@ -3,7 +3,7 @@
  * @Author       : frostime
  * @Date         : 2023-12-17 18:28:19
  * @FilePath     : /src/libs/setting-utils.ts
- * @LastEditTime : 2023-12-17 18:28:46
+ * @LastEditTime : 2023-12-17 20:26:05
  * @Description  : 
  */
 
@@ -25,8 +25,9 @@ export class SettingUtils {
             width: width,
             height: height,
             confirmCallback: () => {
+                //从元素更新值
                 for (let key of this.settings.keys()) {
-                    this.updateValue(key);
+                    this.updateValueFromElement(key);
                 }
                 let data = this.dump();
                 if (callback !== undefined) {
@@ -34,6 +35,12 @@ export class SettingUtils {
                 } else {
                     this.plugin.data[this.name] = data;
                     this.save();
+                }
+            },
+            destroyCallback: () => {
+                //从值恢复元素
+                for (let key of this.settings.keys()) {
+                    this.updateElementFromValue(key);
                 }
             }
         });
@@ -54,16 +61,8 @@ export class SettingUtils {
     async save() {
         let data = this.dump();
         await this.plugin.saveData(this.file, this.dump());
+        console.debug('Save config:', data);
         return data;
-    }
-
-    /**
-     * Get setting item value
-     * @param key key name
-     * @returns setting item value
-     */
-    get(key: string) {
-        return this.settings.get(key)?.value;
     }
 
     /**
@@ -149,7 +148,24 @@ export class SettingUtils {
         })
     }
 
-    private getElement(key: string) {
+    /**
+     * Get setting item value
+     * @param key key name
+     * @returns setting item value
+     */
+    get(key: string) {
+        return this.settings.get(key)?.value;
+    }
+
+    set(key: string, value: any) {
+        let item = this.settings.get(key);
+        if (item) {
+            item.value = value;
+            this.updateElementFromValue(key);
+        }
+    }
+
+    getElement(key: string) {
         let item = this.settings.get(key);
         let element = this.elements.get(key) as any;
         switch (item.type) {
@@ -173,7 +189,7 @@ export class SettingUtils {
         return element;
     }
 
-    private updateValue(key: string) {
+    updateValueFromElement(key: string) {
         let item = this.settings.get(key);
         let element = this.elements.get(key) as any;
         // console.debug(element, element?.value);
@@ -192,6 +208,28 @@ export class SettingUtils {
                 break;
             case 'textarea':
                 item.value = element.value;
+                break;
+        }
+    }
+
+    updateElementFromValue(key: string) {
+        let item = this.settings.get(key);
+        let element = this.elements.get(key) as any;
+        switch (item.type) {
+            case 'checkbox':
+                element.checked = item.value;
+                break;
+            case 'select':
+                element.value = item.value;
+                break;
+            case 'slider':
+                element.value = item.value;
+                break;
+            case 'textinput':
+                element.value = item.value;
+                break;
+            case 'textarea':
+                element.value = item.value;
                 break;
         }
     }
