@@ -109,6 +109,11 @@ export default class WidthPlugin extends Plugin {
             }
         });
 
+        this.iconEle.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            this.openSetting();
+        });
+
         if (mode === 'simple') {
             return;
         }
