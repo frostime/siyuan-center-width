@@ -32,32 +32,7 @@ export default class WidthPlugin extends Plugin {
     // width: number;
     // enableMobile: boolean;
 
-
     async onload() {
-
-        try {
-            await this.init();
-        } catch (e) {
-            console.error(e);
-        }
-
-        // changelog(
-        //     this, 'i18n/changelog.md'
-        // ).then(({ Dialog }) => {
-        //     if (Dialog) {
-        //         Dialog.setFont('1rem');
-        //         Dialog.setSize({
-        //             width: '40%',
-        //             height: '25rem'
-        //         })
-        //     }
-        // }).catch((e) => {
-        //     console.error(e);
-        // });
-
-    }
-
-    async init() {
         await this.initConfig();
 
         const enableMobile = this.settingUtils.get('enableMobile');
