@@ -72,14 +72,13 @@ export default class WidthPlugin extends Plugin {
             return;
         }
 
+        insertStyle("plugin-width", widthStyle);
+
         //如果是在桌面小窗模式下，则默认定死宽度为 92%, 后面有空再优化
         if (InMiniWindow()) {
-            insertStyle("plugin-width", widthStyle);
             document.documentElement.style.setProperty('--centerWidth', `94%`);
             return;
         }
-
-        insertStyle("plugin-width", widthStyle);
 
         document.documentElement.style.setProperty('--centerWidth', `${width}%`);
         this.iconEle = this.addTopBar({
