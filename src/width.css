@@ -1,3 +1,6 @@
+/**
+ * 百分比模式的宽度样式，设置中央面板宽度占比，然后计算左右 padding
+ */
 :root {
     --centerWidth: 70%;
     --lrwidth: calc((100% - var(--centerWidth)) / 2);
@@ -36,6 +39,12 @@ body.body--window #layouts div.protyle-content:not([data-fullwidth="true"])>div.
 
 body.body--window #layouts div.protyle-content:not([data-fullwidth="true"])>div.protyle-background>div.protyle-background__iconw {
     left: var(--lrwidth) !important;
+}
+
+/* 预览模式 */
+div.protyle-preview>div.b3-typography {
+    padding-left: var(--lrwidth) !important;
+    padding-right: var(--lrwidth) !important;
 }
 
 
