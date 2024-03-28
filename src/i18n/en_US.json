@@ -13,6 +13,10 @@
       "title": "Enable in mobile device",
       "description": "Enable in mobile device"
     },
+    "enableHotkey": {
+      "title": "Enable hotkey",
+      "description": "Press Alt+[-=] to decrease/increase width."
+    },
     "mode": {
       "title": "Plugin Mode (Effective after Restart)",
       "description": "Simple Mode: Only enables CSS mode, low overhead but does not work with iframes.<br/>Advanced Mode: Simultaneously enables JavaScript monitoring of the editor, high overhead but works with iframes.",

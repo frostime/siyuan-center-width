@@ -13,6 +13,10 @@
       "title": "移动端生效",
       "description": "如果开启，移动端也会生效"
     },
+    "enableHotkey": {
+      "title": "启用快捷键",
+      "description": "按下 Alt+[-=] 快捷键调整编辑器宽度"
+    },
     "mode": {
       "title": "插件模式 (重启后生效)",
       "description": "简单模式: 只启用 css 模式, 开销小但是对 iframe 不生效<br/>高级模式: 同时启用 js 监听编辑器, 开销大但是对 iframe 生效",

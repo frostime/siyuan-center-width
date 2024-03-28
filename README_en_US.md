@@ -17,6 +17,8 @@
 
 - Title, editor content, iframe, widget
 
+- Press `Alt+[-=]` to decrease/increase width
+
 
 ![](asset/width-plugin.png)
 

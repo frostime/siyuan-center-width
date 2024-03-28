@@ -3,7 +3,7 @@
  * @Author       : frostime
  * @Date         : 2023-12-17 18:31:31
  * @FilePath     : /src/libs/dialog.ts
- * @LastEditTime : 2023-12-17 20:29:52
+ * @LastEditTime : 2024-03-28 20:50:40
  * @Description  : 
  */
 
@@ -16,7 +16,7 @@ export class ChangeWidthDialog extends Dialog {
 
     constructor(plugin: WidthPlugin) {
         const width = plugin.settingUtils.get("width");
-        const enableMobile = plugin.settingUtils.get("enableMobile");
+        // const enableMobile = plugin.settingUtils.get("enableMobile");
 
         let dom = `
         <div id="plugin-width__setting">
