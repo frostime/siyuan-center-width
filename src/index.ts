@@ -160,34 +160,38 @@ export default class WidthPlugin extends Plugin {
 
         window.addEventListener('beforeunload', this.beforeUnloadBindThis);
 
-        this.addCommand({
-            langKey: 'plugin-width.plus',
-            langText: 'Make editor wider',
-            hotkey: '⌥=',
-            callback: () => {
-                let width = this.settingUtils.get('width');
-                if (width + 5 <= 100) {
+        const enableHotkey = this.settingUtils.get('enableHotkey');
+
+        if (enableHotkey) {
+            this.addCommand({
+                langKey: 'plugin-width.plus',
+                langText: 'Make editor wider',
+                hotkey: '⌥=',
+                callback: () => {
                     let width = this.settingUtils.get('width');
-                    width += 5;
-                    this.settingUtils.set('width', width);
-                    document.documentElement.style.setProperty('--centerWidth', `${width}%`);
+                    if (width + 5 <= 100) {
+                        let width = this.settingUtils.get('width');
+                        width += 5;
+                        this.settingUtils.set('width', width);
+                        document.documentElement.style.setProperty('--centerWidth', `${width}%`);
+                    }
                 }
-            }
-        });
-        this.addCommand({
-            langKey: 'plugin-width.minus',
-            langText: 'Make editor narrower',
-            hotkey: '⌥-',
-            callback: () => {
-                let width = this.settingUtils.get('width');
-                if (width - 5 >= 40) {
+            });
+            this.addCommand({
+                langKey: 'plugin-width.minus',
+                langText: 'Make editor narrower',
+                hotkey: '⌥-',
+                callback: () => {
                     let width = this.settingUtils.get('width');
-                    width -= 5;
-                    this.settingUtils.set('width', width);
-                    document.documentElement.style.setProperty('--centerWidth', `${width}%`);
+                    if (width - 5 >= 40) {
+                        let width = this.settingUtils.get('width');
+                        width -= 5;
+                        this.settingUtils.set('width', width);
+                        document.documentElement.style.setProperty('--centerWidth', `${width}%`);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         changelog(
             this, 'i18n/changelog.md'
