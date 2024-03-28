@@ -1,6 +1,6 @@
 import { Plugin, showMessage, confirm, getFrontend, IEventBusMap } from "siyuan";
 
-// import { changelog } from "sy-plugin-changelog";
+import { changelog } from "sy-plugin-changelog";
 
 import widthStyle from "./width.css?inline";
 import { SettingUtils } from "./libs/setting-utils";
@@ -14,6 +14,8 @@ const InMiniWindow = () => {
 }
 
 export default class WidthPlugin extends Plugin {
+
+    beforeUnloadBindThis = this.beforeUnload.bind(this);
 
     iconEle: HTMLElement
 
@@ -156,11 +158,20 @@ export default class WidthPlugin extends Plugin {
         this.eventBus.on("loaded-protyle-static", this.onLoadProtyle);
         this.eventBus.on("destroy-protyle", this.onDestroyProtyle);
 
-        window.addEventListener('beforeunload', () => {
-            this.observer?.disconnect();
-            this.eventBus?.off("loaded-protyle-static", this.onLoadProtyle);
-            this.eventBus?.off("destroy-protyle", this.onDestroyProtyle);
-            this.wysiwygMap.clear();
+        window.addEventListener('beforeunload', this.beforeUnloadBindThis);
+
+        changelog(
+            this, 'i18n/changelog.md'
+        ).then(({ Dialog }) => {
+            if (Dialog) {
+                Dialog.setFont('1.2rem');
+                Dialog.setSize({
+                    width: '40%',
+                    height: '25rem'
+                })
+            }
+        }).catch((e) => {
+            console.error(e);
         });
     }
 
@@ -183,6 +194,13 @@ export default class WidthPlugin extends Plugin {
         }
         this.updateAllPadding();
         console.groupEnd();
+    }
+
+    beforeUnload() {
+        this.observer?.disconnect();
+        this.eventBus?.off("loaded-protyle-static", this.onLoadProtyle);
+        this.eventBus?.off("destroy-protyle", this.onDestroyProtyle);
+        this.wysiwygMap.clear();
     }
 
     updateAllPadding() {
@@ -305,6 +323,7 @@ export default class WidthPlugin extends Plugin {
         this.eventBus.off("loaded-protyle-static", this.onLoadProtyle);
         this.eventBus?.off("destroy-protyle", this.onDestroyProtyle);
         this.observer.disconnect();
+        window.removeEventListener('beforeunload', this.beforeUnloadBindThis);
         this.settingUtils.save();
     }
 }
