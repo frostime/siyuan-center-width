@@ -51,11 +51,46 @@ export default class WidthPlugin extends Plugin {
 
         insertStyle("plugin-width", widthStyle);
 
-        //如果是在桌面小窗模式下，则默认定死宽度为 92%, 后面有空再优化
+        const enableHotkey = this.settingUtils.get('enableHotkey');
+        const AddHotkey = (increment: number, key='width') => {
+            this.addCommand({
+                langKey: 'plugin-width.plus',
+                langText: 'Make editor wider',
+                hotkey: '⌥=',
+                callback: () => {
+                    let width = this.settingUtils.get(key);
+                    if (width + increment <= 100) {
+                        let width = this.settingUtils.get(key);
+                        width += increment;
+                        this.settingUtils.set(key, width);
+                        document.documentElement.style.setProperty('--centerWidth', `${width}%`);
+                    }
+                }
+            });
+            this.addCommand({
+                langKey: 'plugin-width.minus',
+                langText: 'Make editor narrower',
+                hotkey: '⌥-',
+                callback: () => {
+                    let width = this.settingUtils.get(key);
+                    if (width - increment >= 40) {
+                        let width = this.settingUtils.get(key);
+                        width -= increment;
+                        this.settingUtils.set(key, width);
+                        document.documentElement.style.setProperty('--centerWidth', `${width}%`);
+                    }
+                }
+            });
+        }
+
         if (InMiniWindow()) {
-            document.documentElement.style.setProperty('--centerWidth', `94%`);
+            const width = this.settingUtils.get('miniWindowWidth');
+            document.documentElement.style.setProperty('--centerWidth', `${width}%`);
+            if (enableHotkey) AddHotkey(1, 'miniWindowWidth');
             return;
         }
+
+        if (enableHotkey) AddHotkey(3);
 
         document.documentElement.style.setProperty('--centerWidth', `${width}%`);
         this.iconEle = this.addTopBar({
@@ -160,52 +195,19 @@ export default class WidthPlugin extends Plugin {
 
         window.addEventListener('beforeunload', this.beforeUnloadBindThis);
 
-        const enableHotkey = this.settingUtils.get('enableHotkey');
-
-        if (enableHotkey) {
-            this.addCommand({
-                langKey: 'plugin-width.plus',
-                langText: 'Make editor wider',
-                hotkey: '⌥=',
-                callback: () => {
-                    let width = this.settingUtils.get('width');
-                    if (width + 5 <= 100) {
-                        let width = this.settingUtils.get('width');
-                        width += 5;
-                        this.settingUtils.set('width', width);
-                        document.documentElement.style.setProperty('--centerWidth', `${width}%`);
-                    }
-                }
-            });
-            this.addCommand({
-                langKey: 'plugin-width.minus',
-                langText: 'Make editor narrower',
-                hotkey: '⌥-',
-                callback: () => {
-                    let width = this.settingUtils.get('width');
-                    if (width - 5 >= 40) {
-                        let width = this.settingUtils.get('width');
-                        width -= 5;
-                        this.settingUtils.set('width', width);
-                        document.documentElement.style.setProperty('--centerWidth', `${width}%`);
-                    }
-                }
-            });
-        }
-
-        changelog(
-            this, 'i18n/changelog.md'
-        ).then(({ Dialog }) => {
-            if (Dialog) {
-                Dialog.setFont('1.2rem');
-                Dialog.setSize({
-                    width: '40%',
-                    height: '25rem'
-                })
-            }
-        }).catch((e) => {
-            console.error(e);
-        });
+        // changelog(
+        //     this, 'i18n/changelog.md'
+        // ).then(({ Dialog }) => {
+        //     if (Dialog) {
+        //         Dialog.setFont('1.2rem');
+        //         Dialog.setSize({
+        //             width: '40%',
+        //             height: '25rem'
+        //         })
+        //     }
+        // }).catch((e) => {
+        //     console.error(e);
+        // });
     }
 
     onLayoutReady() {
@@ -308,6 +310,18 @@ export default class WidthPlugin extends Plugin {
                 min: 40,
                 max: 100,
                 step: 1
+            }
+        });
+        this.settingUtils.addItem({
+            key: 'miniWindowWidth',
+            value: 94,
+            type: 'slider',
+            title: this.i18n.setting.miniWindowWidth.title,
+            description: this.i18n.setting.miniWindowWidth.description,
+            slider: {
+                min: 50,
+                max: 100,
+                step: 0.5
             }
         });
         this.settingUtils.addItem({

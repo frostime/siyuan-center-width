@@ -22,6 +22,10 @@
       "description": "Simple Mode: Only enables CSS mode, low overhead but does not work with iframes.<br/>Advanced Mode: Simultaneously enables JavaScript monitoring of the editor, high overhead but works with iframes.",
       "simple": "Simple Mode",
       "advanced": "Advanced Mode"
+    },
+    "miniWindowWidth": {
+      "title": "Mini window width",
+      "description": "The width of the independent mini window opened in SiYuan, default 94%"
     }
   }
 }

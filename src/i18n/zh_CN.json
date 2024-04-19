@@ -22,6 +22,10 @@
       "description": "简单模式: 只启用 css 模式, 开销小但是对 iframe 不生效<br/>高级模式: 同时启用 js 监听编辑器, 开销大但是对 iframe 生效",
       "simple": "简单模式",
       "advanced": "高级模式"
+    },
+    "miniWindowWidth": {
+      "title": "小窗口模式下的宽度",
+      "description": "在思源中打开的独立小窗口的宽度, 默认 94%"
     }
   }
 }
