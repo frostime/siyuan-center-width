@@ -92,7 +92,8 @@ export default class WidthPlugin extends Plugin {
 
         if (enableHotkey) AddHotkey(3);
 
-        document.documentElement.style.setProperty('--centerWidth', `${width}%`);
+        this.updateStyleVar();
+        // document.documentElement.style.setProperty('--centerWidth', `${width}%`);
         this.iconEle = this.addTopBar({
             icon: this.icon,
             title: this.i18n.title,

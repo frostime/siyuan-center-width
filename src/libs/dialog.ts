@@ -3,7 +3,7 @@
  * @Author       : frostime
  * @Date         : 2023-12-17 18:31:31
  * @FilePath     : /src/libs/dialog.ts
- * @LastEditTime : 2024-04-28 21:53:36
+ * @LastEditTime : 2024-04-28 21:56:05
  * @Description  : 
  */
 
@@ -72,6 +72,7 @@ class PixelWidthDialog extends Dialog {
                     class="b3-text-field fn__flex-center fn__size200"
                     type="number" value="${width}"
                 />
+                px
             </div>
         </div>
         `
