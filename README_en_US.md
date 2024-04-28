@@ -22,6 +22,16 @@
 
 ![](asset/width-plugin.png)
 
+## Two width modes
+
+- Percentage mode: in `%` units
+- Fixed width mode: in pixels
+
+## Main Editor and Small Window
+
+- Set SiYuan's main editor's and mini-window's widths separately.
+- The width of the small window is fixed in percentage mode, without the fixed width mode.
+
 ## Two Running Modes
 
 - Simple Mode: CSS Styling Only

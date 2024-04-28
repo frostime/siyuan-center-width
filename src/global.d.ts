@@ -1,4 +1,13 @@
-type TSettingItemType = "checkbox" | "select" | "textinput" | "textarea" | "slider" | "button";
+/*
+ * Copyright (c) 2024 by frostime. All Rights Reserved.
+ * @Author       : frostime
+ * @Date         : 2023-12-17 18:28:36
+ * @FilePath     : /src/global.d.ts
+ * @LastEditTime : 2024-04-28 20:53:40
+ * @Description  : 
+ */
+
+type TSettingItemType = "checkbox" | "select" | "textinput" | "textarea" | "number" | "slider" | "button" | "hint";
 interface ISettingItem {
     key: string;
     value: any;
@@ -12,8 +21,12 @@ interface ISettingItem {
         step: number;
     };
     options?: { [key: string | number]: string };
+    action?: {
+        callback: () => void;
+    }
     button?: {
         label: string;
         callback: () => void;
     }
+    createElement?: (value: any) => HTMLElement;
 }

@@ -1,11 +1,11 @@
 import { Plugin, showMessage, confirm, getFrontend, IEventBusMap } from "siyuan";
 
-import { changelog } from "sy-plugin-changelog";
+// import { changelog } from "sy-plugin-changelog";
 
 import widthStyle from "./width.css?inline";
 import { SettingUtils } from "./libs/setting-utils";
 import { insertStyle, removeStyle } from "./libs/style";
-import { ChangeWidthDialog } from "./libs/dialog";
+import { createDialog } from "./libs/dialog";
 import { throttle } from "./libs/misc";
 
 const InMiniWindow = () => {
@@ -92,7 +92,8 @@ export default class WidthPlugin extends Plugin {
 
         if (enableHotkey) AddHotkey(3);
 
-        document.documentElement.style.setProperty('--centerWidth', `${width}%`);
+        this.updateStyleVar();
+        // document.documentElement.style.setProperty('--centerWidth', `${width}%`);
         this.iconEle = this.addTopBar({
             icon: this.icon,
             title: this.i18n.title,
@@ -116,7 +117,8 @@ export default class WidthPlugin extends Plugin {
                     confirm(this.i18n.title, this.i18n.fullWidth);
                     return;
                 }
-                new ChangeWidthDialog(this);
+                // new ChangeWidthDialog(this);
+                createDialog(this);
             }
         });
 
@@ -278,8 +280,14 @@ export default class WidthPlugin extends Plugin {
                 parentWidth -= 10;
             }
 
+            const mode = this.settingUtils.get('widthMode');
             const width = this.settingUtils.get('width');
-            let padding = parentWidth * (1 - width / 100) / 2;
+            let padding: number;
+            if (mode === '%') {
+                padding = parentWidth * (1 - width / 100) / 2;
+            } else if (mode === 'px') {
+                padding = (parentWidth - width) / 2;
+            }
             ele.style.setProperty('padding-left', `${padding}px`);
             ele.style.setProperty('padding-right', `${padding}px`);
             // console.log("updateWysiwygPadding", padding);
@@ -293,23 +301,75 @@ export default class WidthPlugin extends Plugin {
         return false;
     }
 
+    updateStyleVar(width?: number, mode?: string) {
+        mode = mode ?? this.settingUtils.get('widthMode');
+        width = width ?? this.settingUtils.get('width');
+        let widthStyle = mode === '%' ? `${width}%` : `${width}px`;
+        document.documentElement.style.setProperty('--centerWidth', `${widthStyle}`);
+    }
+
     async initConfig() {
-
-        this.settingUtils = new SettingUtils(this, 'config', async (data) => {
-            document.documentElement.style.setProperty('--centerWidth', `${data.width}%`);
-            this.settingUtils.save();
-
-        }, '700px', '500px');
+        this.settingUtils = new SettingUtils({
+            plugin: this,
+            name: 'config',
+            callback: (data) => {
+                //切换模式时，需要重新设置
+                if (data.widthMode === '%' && data.width > 100) {
+                    data.width = 70;
+                    this.settingUtils.set('width', data.width);
+                } else if (data.widthMode === 'px' && data.width < 100) {
+                    data.width = 800;
+                    this.settingUtils.set('width', data.width);
+                }
+                this.updateStyleVar(data.width, data.widthMode);
+            },
+            width: '700px',
+            height: '500px'
+        });
+        this.settingUtils.addItem({
+            key: 'widthMode',
+            type: 'select',
+            value: '%',
+            title: '编辑器宽度设置模式',
+            description: '设置编辑器宽度的单位: 百分比或者 px',
+            options: {
+                '%': '百分比',
+                'px': '像素'
+            }
+        });
         this.settingUtils.addItem({
             key: 'width',
             value: 70,
             type: 'slider',
             title: this.i18n.setting.width.title,
             description: this.i18n.setting.width.description,
-            slider: {
-                min: 40,
-                max: 100,
-                step: 1
+            createElement: (value) => {
+                let mode = this.settingUtils.get('widthMode');
+                let ele: HTMLInputElement;
+                if (mode === '%') {
+                    ele = this.settingUtils.createDefaultElement({
+                        key: '',
+                        title: '',
+                        description: '',
+                        type: 'slider',
+                        value: value <= 100 ? value : 70, //如果大于 100 则默认 70%
+                        slider: {
+                            min: 40,
+                            max: 100,
+                            step: 1
+                        }
+                    }) as HTMLInputElement;
+                } else {
+                    ele = this.settingUtils.createDefaultElement({
+                        key: '',
+                        title: '',
+                        description: '',
+                        type: 'number',
+                        value: value >= 100 ? value : 800, //如果小于 100 则默认 800px
+                    }) as HTMLInputElement;
+                }
+                // this.settingUtils.set('width', value);
+                return ele;
             }
         });
         this.settingUtils.addItem({
