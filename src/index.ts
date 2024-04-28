@@ -1,6 +1,6 @@
 import { Plugin, showMessage, confirm, getFrontend, IEventBusMap } from "siyuan";
 
-import { changelog } from "sy-plugin-changelog";
+// import { changelog } from "sy-plugin-changelog";
 
 import widthStyle from "./width.css?inline";
 import { SettingUtils } from "./libs/setting-utils";
@@ -294,12 +294,15 @@ export default class WidthPlugin extends Plugin {
     }
 
     async initConfig() {
-
-        this.settingUtils = new SettingUtils(this, 'config', async (data) => {
-            document.documentElement.style.setProperty('--centerWidth', `${data.width}%`);
-            this.settingUtils.save();
-
-        }, '700px', '500px');
+        this.settingUtils = new SettingUtils({
+            plugin: this,
+            name: 'config',
+            callback: (data) => {
+                document.documentElement.style.setProperty('--centerWidth', `${data.width}%`);
+            },
+            width: '700px',
+            height: '500px'
+        });
         this.settingUtils.addItem({
             key: 'width',
             value: 70,
