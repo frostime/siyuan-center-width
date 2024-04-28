@@ -3,7 +3,7 @@
  * @Author       : frostime
  * @Date         : 2023-12-17 18:28:19
  * @FilePath     : /src/libs/setting-utils.ts
- * @LastEditTime : 2024-04-28 20:56:46
+ * @LastEditTime : 2024-04-28 21:18:40
  * @Description  : 
  */
 
@@ -189,6 +189,7 @@ export class SettingUtils {
                 createActionElement: () => {
                     let val = this.get(item.key);
                     let element = item.createElement(val);
+                    // console.log(valueOf(element));
                     this.elements.set(item.key, element);
                     return element;
                 }

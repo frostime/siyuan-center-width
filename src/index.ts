@@ -298,10 +298,23 @@ export default class WidthPlugin extends Plugin {
             plugin: this,
             name: 'config',
             callback: (data) => {
-                document.documentElement.style.setProperty('--centerWidth', `${data.width}%`);
+                let widthMode = this.settingUtils.get('widthMode');
+                let widthStyle = widthMode === '%' ? `${data.width}%` : `${data.width}px`;
+                document.documentElement.style.setProperty('--centerWidth', `${widthStyle}`);
             },
             width: '700px',
             height: '500px'
+        });
+        this.settingUtils.addItem({
+            key: 'widthMode',
+            type: 'select',
+            value: '%',
+            title: '编辑器宽度设置模式',
+            description: '设置编辑器宽度的单位: 百分比或者 px',
+            options: {
+                '%': '百分比',
+                'px': '像素'
+            }
         });
         this.settingUtils.addItem({
             key: 'width',
@@ -309,10 +322,32 @@ export default class WidthPlugin extends Plugin {
             type: 'slider',
             title: this.i18n.setting.width.title,
             description: this.i18n.setting.width.description,
-            slider: {
-                min: 40,
-                max: 100,
-                step: 1
+            createElement: (value) => {
+                let mode = this.settingUtils.get('widthMode');
+                let ele: HTMLInputElement;
+                if (mode === '%') {
+                    ele = this.settingUtils.createDefaultElement({
+                        key: '',
+                        title: '',
+                        description: '',
+                        type: 'slider',
+                        value: value <= 100 ? value : 70,
+                        slider: {
+                            min: 40,
+                            max: 100,
+                            step: 1
+                        }
+                    }) as HTMLInputElement;
+                } else {
+                    ele = this.settingUtils.createDefaultElement({
+                        key: '',
+                        title: '',
+                        description: '',
+                        type: 'number',
+                        value: value <= 100 ? value : 800,
+                    }) as HTMLInputElement;
+                }
+                return ele;
             }
         });
         this.settingUtils.addItem({
