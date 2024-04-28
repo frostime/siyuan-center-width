@@ -5,7 +5,7 @@ import { Plugin, showMessage, confirm, getFrontend, IEventBusMap } from "siyuan"
 import widthStyle from "./width.css?inline";
 import { SettingUtils } from "./libs/setting-utils";
 import { insertStyle, removeStyle } from "./libs/style";
-import { ChangeWidthDialog } from "./libs/dialog";
+import { createDialog } from "./libs/dialog";
 import { throttle } from "./libs/misc";
 
 const InMiniWindow = () => {
@@ -116,7 +116,8 @@ export default class WidthPlugin extends Plugin {
                     confirm(this.i18n.title, this.i18n.fullWidth);
                     return;
                 }
-                new ChangeWidthDialog(this);
+                // new ChangeWidthDialog(this);
+                createDialog(this);
             }
         });
 
