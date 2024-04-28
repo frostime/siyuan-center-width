@@ -293,14 +293,25 @@ export default class WidthPlugin extends Plugin {
         return false;
     }
 
+    updateStyleVar(width?: number) {
+        let widthMode = this.settingUtils.get('widthMode');
+        width = width ?? this.settingUtils.get('width');
+        let widthStyle = widthMode === '%' ? `${width}%` : `${width}px`;
+        document.documentElement.style.setProperty('--centerWidth', `${widthStyle}`);
+    }
+
     async initConfig() {
         this.settingUtils = new SettingUtils({
             plugin: this,
             name: 'config',
             callback: (data) => {
-                let widthMode = this.settingUtils.get('widthMode');
-                let widthStyle = widthMode === '%' ? `${data.width}%` : `${data.width}px`;
-                document.documentElement.style.setProperty('--centerWidth', `${widthStyle}`);
+                //切换模式时，需要重新设置
+                if (data.widthMode === '%' && data.width > 100) {
+                    data.width = 70;
+                } else if (data.widthMode === 'px' && data.width < 100) {
+                    data.width = 800;
+                }
+                this.updateStyleVar(data.width);
             },
             width: '700px',
             height: '500px'
@@ -331,7 +342,7 @@ export default class WidthPlugin extends Plugin {
                         title: '',
                         description: '',
                         type: 'slider',
-                        value: value <= 100 ? value : 70,
+                        value: value <= 100 ? value : 70, //如果大于 100 则默认 70%
                         slider: {
                             min: 40,
                             max: 100,
@@ -344,9 +355,10 @@ export default class WidthPlugin extends Plugin {
                         title: '',
                         description: '',
                         type: 'number',
-                        value: value <= 100 ? value : 800,
+                        value: value >= 100 ? value : 800, //如果小于 100 则默认 800px
                     }) as HTMLInputElement;
                 }
+                // this.settingUtils.set('width', value);
                 return ele;
             }
         });

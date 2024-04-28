@@ -3,7 +3,7 @@
  * @Author       : frostime
  * @Date         : 2023-12-17 18:28:19
  * @FilePath     : /src/libs/setting-utils.ts
- * @LastEditTime : 2024-04-28 21:18:40
+ * @LastEditTime : 2024-04-28 21:29:03
  * @Description  : 
  */
 
@@ -26,12 +26,13 @@ const valueOf = (ele: HTMLElement) => {
     } else if (ele instanceof HTMLTextAreaElement) {
         val = ele.value;
     } else {
-        val = ele.textContent;
+        val = ele?.textContent;
     }
     return val;
 }
 
 const setValue = (ele: HTMLElement, value: any) => {
+    if (ele === null || ele === undefined) return;
     if (ele instanceof HTMLInputElement) {
         if (ele.type === 'checkbox') {
             ele.checked = value;
@@ -79,8 +80,10 @@ export class SettingUtils {
                 if (args.callback !== undefined) {
                     args.callback(data);
                 }
+
                 this.plugin.data[this.name] = data;
                 this.save();
+                
             },
             destroyCallback: () => {
                 //从值恢复元素
