@@ -3,7 +3,7 @@
  * @Author       : frostime
  * @Date         : 2023-12-17 18:31:31
  * @FilePath     : /src/libs/dialog.ts
- * @LastEditTime : 2024-04-28 21:56:05
+ * @LastEditTime : 2024-04-28 22:12:13
  * @Description  : 
  */
 
@@ -90,7 +90,7 @@ class PixelWidthDialog extends Dialog {
         header.style.textAlign = "center";
 
         const inputCenterWidth: HTMLInputElement = this.element.querySelector('input.b3-text-field');
-        inputCenterWidth.addEventListener("input", (e) => {
+        inputCenterWidth.addEventListener("change", (e) => {
             const width = parseInt((e.target as HTMLInputElement).value);
             plugin.settingUtils.set("width", width);
             header.innerText = `${plugin.i18n.title}: ${width}px`;
