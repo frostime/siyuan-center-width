@@ -316,8 +316,10 @@ export default class WidthPlugin extends Plugin {
                 //切换模式时，需要重新设置
                 if (data.widthMode === '%' && data.width > 100) {
                     data.width = 70;
+                    this.settingUtils.set('width', data.width);
                 } else if (data.widthMode === 'px' && data.width < 100) {
                     data.width = 800;
+                    this.settingUtils.set('width', data.width);
                 }
                 this.updateStyleVar(data.width, data.widthMode);
             },
