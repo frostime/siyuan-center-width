@@ -280,8 +280,14 @@ export default class WidthPlugin extends Plugin {
                 parentWidth -= 10;
             }
 
+            const mode = this.settingUtils.get('widthMode');
             const width = this.settingUtils.get('width');
-            let padding = parentWidth * (1 - width / 100) / 2;
+            let padding: number;
+            if (mode === '%') {
+                padding = parentWidth * (1 - width / 100) / 2;
+            } else if (mode === 'px') {
+                padding = (parentWidth - width) / 2;
+            }
             ele.style.setProperty('padding-left', `${padding}px`);
             ele.style.setProperty('padding-right', `${padding}px`);
             // console.log("updateWysiwygPadding", padding);
@@ -295,10 +301,10 @@ export default class WidthPlugin extends Plugin {
         return false;
     }
 
-    updateStyleVar(width?: number) {
-        let widthMode = this.settingUtils.get('widthMode');
+    updateStyleVar(width?: number, mode?: string) {
+        mode = mode ?? this.settingUtils.get('widthMode');
         width = width ?? this.settingUtils.get('width');
-        let widthStyle = widthMode === '%' ? `${width}%` : `${width}px`;
+        let widthStyle = mode === '%' ? `${width}%` : `${width}px`;
         document.documentElement.style.setProperty('--centerWidth', `${widthStyle}`);
     }
 
@@ -313,7 +319,7 @@ export default class WidthPlugin extends Plugin {
                 } else if (data.widthMode === 'px' && data.width < 100) {
                     data.width = 800;
                 }
-                this.updateStyleVar(data.width);
+                this.updateStyleVar(data.width, data.widthMode);
             },
             width: '700px',
             height: '500px'
