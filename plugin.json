@@ -2,8 +2,8 @@
   "name": "siyuan-center-width",
   "author": "frostime",
   "url": "https://github.com/frostime/siyuan-center-width",
-  "version": "1.0.0",
-  "minAppVersion": "3.0.0",
+  "version": "1.1.0",
+  "minAppVersion": "3.0.11",
   "displayName": {
     "default": "编辑器宽度",
     "zh_CN": "编辑器宽度",

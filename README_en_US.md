@@ -1,5 +1,6 @@
 
 - Please turn off 'adaptive width', i.e. full width mode, before using
+- The configuration for each device is independent and needs to be set separately
 
 ## Basic usage
 
