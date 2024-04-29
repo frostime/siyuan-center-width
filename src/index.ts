@@ -38,7 +38,6 @@ export default class WidthPlugin extends Plugin {
         await this.initConfig();
 
         const enableMobile = this.settingUtils.get('enableMobile');
-        const width = this.settingUtils.get('width');
         const mode = this.settingUtils.get('mode');
 
         console.debug(enableMobile, getFrontend());
@@ -309,9 +308,10 @@ export default class WidthPlugin extends Plugin {
     }
 
     async initConfig() {
+        const device = window.siyuan.config.system.id;
         this.settingUtils = new SettingUtils({
             plugin: this,
-            name: 'config',
+            name: `config-${device}`,
             callback: (data) => {
                 //切换模式时，需要重新设置
                 if (data.widthMode === '%' && data.width > 100) {

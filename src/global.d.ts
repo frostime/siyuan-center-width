@@ -3,7 +3,7 @@
  * @Author       : frostime
  * @Date         : 2023-12-17 18:28:36
  * @FilePath     : /src/global.d.ts
- * @LastEditTime : 2024-04-28 20:53:40
+ * @LastEditTime : 2024-04-29 14:34:08
  * @Description  : 
  */
 
@@ -29,4 +29,14 @@ interface ISettingItem {
         callback: () => void;
     }
     createElement?: (value: any) => HTMLElement;
+}
+
+declare interface Window {
+    siyuan: {
+        config: {
+            system: {
+                id: string;
+            }
+        }
+    }
 }
