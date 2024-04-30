@@ -16,8 +16,8 @@
     padding-right: var(--lrwidth) !important;
 }
 
-#layouts div.layout__center div.protyle-content:not([data-fullwidth="true"]) div.protyle-background>div.protyle-background__iconw {
-    left: var(--lrwidth) !important;
+#layouts div.layout__center div.protyle-content:not([data-fullwidth="true"]) div.protyle-background>div.protyle-background__ia {
+    margin-left: var(--lrwidth) !important;
 }
 
 #layouts div.layout__center div.protyle-content div.protyle-attr--refcount {
@@ -35,8 +35,8 @@ body.body--window #layouts div.protyle-content:not([data-fullwidth="true"]) div.
     padding-right: var(--lrwidth) !important;
 }
 
-body.body--window #layouts div.protyle-content:not([data-fullwidth="true"]) div.protyle-background>div.protyle-background__iconw {
-    left: var(--lrwidth) !important;
+body.body--window #layouts div.protyle-content:not([data-fullwidth="true"]) div.protyle-background>div.protyle-background__ia {
+    margin-left: var(--lrwidth) !important;
 }
 
 /* 预览模式 */
