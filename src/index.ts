@@ -13,6 +13,100 @@ const InMiniWindow = () => {
     return body.classList.contains('body--window');
 }
 
+
+interface IZoomer {
+    plus: () => void;
+    minus: () => void;
+}
+
+const debug = (msg: string) => {
+    if (process.env.DEV_MODE === "true") {
+        console.debug(msg);
+    }
+}
+
+const DefaultIncrement = {
+    '%': 1,
+    'px': 25
+};
+
+
+const Zoomer = (
+    plugin: WidthPlugin,
+    key = 'width',
+    incrementMap: {'%'?: number, 'px'?: number} = DefaultIncrement,
+    type?: '%' | 'px'
+) => {
+    if (!incrementMap) {
+        incrementMap = DefaultIncrement;
+    } else {
+        incrementMap = Object.assign(DefaultIncrement, incrementMap);
+    }
+
+    const plusPercent = () => {
+        let width = plugin.settingUtils.get(key);
+        const increment = incrementMap['%'];
+        if (width + increment <= 100) {
+            width += increment;
+            plugin.settingUtils.set(key, width);
+            plugin.updateStyleVar(width, '%');
+            debug(`+${increment}: ${width}%`)
+        }
+    }
+    const minusPercent = () => {
+        let width = plugin.settingUtils.get(key);
+        const increment = incrementMap['%'];
+        if (width - increment >= 40) {
+            width -= increment;
+            plugin.settingUtils.set(key, width);
+            plugin.updateStyleVar(width, '%');
+            debug(`-${increment}: ${width}%`)
+        }
+    }
+    const plusPx = () => {
+        let width = plugin.settingUtils.get(key);
+        const increment = incrementMap['px']
+        width += increment;
+        plugin.settingUtils.set(key, width);
+        plugin.updateStyleVar(width, 'px');
+        debug(`+${increment}: ${width}px`)
+    }
+    const minusPx = () => {
+        let width = plugin.settingUtils.get(key);
+        const increment = incrementMap['px']
+        width -= increment;
+        plugin.settingUtils.set(key, width);
+        plugin.updateStyleVar(width, 'px');
+        debug(`-${increment}: ${width}px`)
+    }
+
+    return {
+        plus: () => {
+            let curType = type;
+            if (curType === undefined) {
+                curType = plugin.settingUtils.get('widthMode');
+            }
+            if (curType === '%') {
+                plusPercent();
+            } else {
+                plusPx();
+            }
+        },
+        minus: () => {
+            let curType = type;
+            if (curType === undefined) {
+                curType = plugin.settingUtils.get('widthMode');
+            }
+            if (curType === '%') {
+                minusPercent();
+            } else {
+                minusPx();
+            }
+        }
+    }
+}
+
+
 export default class WidthPlugin extends Plugin {
 
     beforeUnloadBindThis = this.beforeUnload.bind(this);
@@ -51,19 +145,13 @@ export default class WidthPlugin extends Plugin {
         insertStyle("plugin-width", widthStyle);
 
         const enableHotkey = this.settingUtils.get('enableHotkey');
-        const AddHotkey = (increment: number, key='width') => {
+        const AddHotkey = (zoomer: IZoomer) => {
             this.addCommand({
                 langKey: 'plugin-width.plus',
                 langText: 'Make editor wider',
                 hotkey: '⌥=',
                 callback: () => {
-                    let width = this.settingUtils.get(key);
-                    if (width + increment <= 100) {
-                        let width = this.settingUtils.get(key);
-                        width += increment;
-                        this.settingUtils.set(key, width);
-                        document.documentElement.style.setProperty('--centerWidth', `${width}%`);
-                    }
+                    zoomer.plus();
                 }
             });
             this.addCommand({
@@ -71,13 +159,7 @@ export default class WidthPlugin extends Plugin {
                 langText: 'Make editor narrower',
                 hotkey: '⌥-',
                 callback: () => {
-                    let width = this.settingUtils.get(key);
-                    if (width - increment >= 40) {
-                        let width = this.settingUtils.get(key);
-                        width -= increment;
-                        this.settingUtils.set(key, width);
-                        document.documentElement.style.setProperty('--centerWidth', `${width}%`);
-                    }
+                    zoomer.minus();
                 }
             });
         }
@@ -85,11 +167,15 @@ export default class WidthPlugin extends Plugin {
         if (InMiniWindow()) {
             const width = this.settingUtils.get('miniWindowWidth');
             document.documentElement.style.setProperty('--centerWidth', `${width}%`);
-            if (enableHotkey) AddHotkey(1, 'miniWindowWidth');
+            if (enableHotkey) {
+                AddHotkey(Zoomer(this, 'miniWindowWidth', { '%': 1 }, '%'));
+            }
             return;
         }
 
-        if (enableHotkey) AddHotkey(3);
+        if (enableHotkey) {
+            AddHotkey(Zoomer(this, 'width', { '%': 2, 'px': 25 }));
+        }
 
         this.updateStyleVar();
         // document.documentElement.style.setProperty('--centerWidth', `${width}%`);
@@ -313,11 +399,11 @@ export default class WidthPlugin extends Plugin {
             plugin: this,
             name: `config-${device}`,
             callback: (data) => {
-                //切换模式时，需要重新设置
-                if (data.widthMode === '%' && data.width > 100) {
+                let olddata = this.data[`config-${device}`];
+                if (data.widthMode === '%' && olddata.widthMode === 'px') {
                     data.width = 70;
                     this.settingUtils.set('width', data.width);
-                } else if (data.widthMode === 'px' && data.width < 100) {
+                } else if (data.widthMode === 'px' && olddata.widthMode === '%') {
                     data.width = 800;
                     this.settingUtils.set('width', data.width);
                 }
@@ -404,7 +490,7 @@ export default class WidthPlugin extends Plugin {
             type: 'select',
             title: this.i18n.setting.mode.title,
             description: this.i18n.setting.mode.description,
-            options:{
+            options: {
                 simple: this.i18n.setting.mode.simple,
                 advanced: this.i18n.setting.mode.advanced
             }
