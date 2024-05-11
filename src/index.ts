@@ -134,7 +134,7 @@ export default class WidthPlugin extends Plugin {
         const enableMobile = this.settingUtils.get('enableMobile');
         const mode = this.settingUtils.get('mode');
 
-        console.debug(enableMobile, getFrontend());
+        // console.debug(enableMobile, getFrontend());
 
         //1. 如果是在移动端模式下，且没有开启移动端模式，则不加载
         let forbidMobile = !enableMobile && getFrontend() === "mobile";
@@ -393,6 +393,11 @@ export default class WidthPlugin extends Plugin {
         document.documentElement.style.setProperty('--centerWidth', `${widthStyle}`);
     }
 
+    updateMinPadding() {
+        let minPadding = this.settingUtils.get('minPadding');
+        document.documentElement.style.setProperty('--editorMinPadding', `${minPadding}px`);
+    }
+
     async initConfig() {
         const device = window.siyuan.config.system.id;
         this.settingUtils = new SettingUtils({
@@ -408,6 +413,7 @@ export default class WidthPlugin extends Plugin {
                     this.settingUtils.set('width', data.width);
                 }
                 this.updateStyleVar(data.width, data.widthMode);
+                this.updateMinPadding();
             },
             width: '700px',
             height: '500px'
@@ -469,6 +475,13 @@ export default class WidthPlugin extends Plugin {
                 max: 100,
                 step: 0.5
             }
+        });
+        this.settingUtils.addItem({
+            key: 'minPadding',
+            value: 16,
+            type: 'number',
+            title: '最小边距 (px)',
+            description: '限制编辑器两侧边距的最小值，以防止宽度设置过大挡住了块标按钮'
         });
         this.settingUtils.addItem({
             key: 'enableMobile',

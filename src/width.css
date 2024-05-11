@@ -1,7 +1,7 @@
 :root {
     --centerWidth: 70%;
-    /* --lrwidth: calc((100% - var(--centerWidth)) / 2); */
-    --lrwidth: max(calc((100% - var(--centerWidth)) / 2), 15px);
+    --editorMinPadding: 16px;
+    --lrwidth: max(calc((100% - var(--centerWidth)) / 2), var(--editorMinPadding));
     --refcountRight: -16px;
 }
 
