@@ -26,6 +26,14 @@
     "miniWindowWidth": {
       "title": "小窗口模式下的宽度",
       "description": "在思源中打开的独立小窗口的宽度, 默认 94%"
+    },
+    "widthMode": {
+      "title": "编辑器宽度设置模式",
+      "description": "设置编辑器宽度的单位: 百分比或者 px"
+    },
+    "minPadding": {
+      "title": "最小内边距 (px)",
+      "description": "限制编辑器两侧边距的最小值，以防止宽度设置过大挡住了块标按钮, 默认为 16px"
     }
   }
 }

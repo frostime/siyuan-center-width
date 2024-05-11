@@ -422,8 +422,8 @@ export default class WidthPlugin extends Plugin {
             key: 'widthMode',
             type: 'select',
             value: '%',
-            title: '编辑器宽度设置模式',
-            description: '设置编辑器宽度的单位: 百分比或者 px',
+            title: this.i18n.setting.widthMode.title,
+            description: this.i18n.setting.widthMode.description,
             options: {
                 '%': '百分比',
                 'px': '像素'
@@ -480,8 +480,8 @@ export default class WidthPlugin extends Plugin {
             key: 'minPadding',
             value: 16,
             type: 'number',
-            title: '最小边距 (px)',
-            description: '限制编辑器两侧边距的最小值，以防止宽度设置过大挡住了块标按钮'
+            title: this.i18n.setting.minPadding.title,
+            description: this.i18n.setting.minPadding.description,
         });
         this.settingUtils.addItem({
             key: 'enableMobile',

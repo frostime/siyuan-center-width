@@ -26,6 +26,15 @@
     "miniWindowWidth": {
       "title": "Mini window width",
       "description": "The width of the independent mini window opened in SiYuan, default 94%"
+    },
+    "widthMode": {
+      "title": "Editor Width Setting Mode",
+      "description": "Set the unit of editor width: percentage or px"
+    },
+    "minPadding": {
+      "title": "Minimum Padding (px)",
+      "description": "Limit the minimum value of the editor's side padding to prevent the width setting from being too large and blocking the block icon button, default to 16px"
     }
+
   }
 }
