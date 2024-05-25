@@ -34,7 +34,10 @@
     "minPadding": {
       "title": "Minimum Padding (px)",
       "description": "Limit the minimum value of the editor's side padding to prevent the width setting from being too large and blocking the block icon button, default to 16px"
+    },
+    "offset": {
+      "title": "Editor Offset",
+      "description": "Adjust the horizontal offset of the editor, with a default of 0px. Positive values shift the editor to the right, while negative values shift it to the left. Acceptable CSS units include 10px, 1em, 1rem, 10%, etc."
     }
-
   }
 }

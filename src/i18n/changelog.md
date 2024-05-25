@@ -1,6 +1,8 @@
-## Width Plugin v1.0.0
+## Width Plugin v2.0.0
 
-- 增加了百分比之外的宽度设置模式
-- [#20](https://github.com/frostime/siyuan-center-width/issues/20)
-- [#8](https://github.com/frostime/siyuan-center-width/issues/8)
+- 设置中允许设置编辑器偏移量，让左右边距不对称 [#12](https://github.com/frostime/siyuan-center-width/issues/12)
+
+---
+
+- Allow setting editor offset in settings to make left and right margins asymmetrical [#12](https://github.com/frostime/siyuan-center-width/issues/12)
 

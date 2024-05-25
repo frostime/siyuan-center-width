@@ -3,25 +3,34 @@
     --editorMinPadding: 16px;
     --lrwidth: max(calc((100% - var(--centerWidth)) / 2), var(--editorMinPadding));
     --refcountRight: -16px;
+    --editorOffset: 0px;
+    --leftWidth: max(calc(var(--lrwidth) + var(--editorOffset)), var(--editorMinPadding));
+    --rightWidth: max(calc(var(--lrwidth) - var(--editorOffset)), var(--editorMinPadding));
 }
 
 /* .layout__center 只对中央编辑器生效, 不对 dock 栏目和 floating window 的 protyle 生效 */
 #layouts div.layout__center div.protyle-content:not([data-fullwidth="true"]) div.protyle-title {
-    margin-left: var(--lrwidth) !important;
-    margin-right: var(--lrwidth) !important;
+    margin-left: var(--leftWidth) !important;
+    margin-right: var(--rightWidth) !important;
 }
 
 #layouts div.layout__center div.protyle-content:not([data-fullwidth="true"]) div.protyle-wysiwyg {
-    padding-left: var(--lrwidth) !important;
-    padding-right: var(--lrwidth) !important;
+    padding-left: var(--leftWidth) !important;
+    padding-right: var(--rightWidth) !important;
 }
 
 #layouts div.layout__center div.protyle-content:not([data-fullwidth="true"]) div.protyle-background>div.protyle-background__ia {
-    margin-left: var(--lrwidth) !important;
+    margin-left: var(--leftWidth) !important;
 }
 
 #layouts div.layout__center div.protyle-content div.protyle-attr--refcount {
     right: var(--refcountRight) !important;
+}
+
+/* 预览模式 */
+div.protyle-preview>div.b3-typography {
+    padding-left: var(--leftWidth) !important;
+    padding-right: var(--rightWidth) !important;
 }
 
 /* 对 Mini Window 做特别处理*/
@@ -37,12 +46,6 @@ body.body--window #layouts div.protyle-content:not([data-fullwidth="true"]) div.
 
 body.body--window #layouts div.protyle-content:not([data-fullwidth="true"]) div.protyle-background>div.protyle-background__ia {
     margin-left: var(--lrwidth) !important;
-}
-
-/* 预览模式 */
-div.protyle-preview>div.b3-typography {
-    padding-left: var(--lrwidth) !important;
-    padding-right: var(--lrwidth) !important;
 }
 
 

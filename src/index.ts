@@ -1,6 +1,6 @@
 import { Plugin, showMessage, confirm, getFrontend, IEventBusMap } from "siyuan";
 
-// import { changelog } from "sy-plugin-changelog";
+import { changelog } from "sy-plugin-changelog";
 
 import widthStyle from "./width.css?inline";
 import { SettingUtils } from "./libs/setting-utils";
@@ -34,7 +34,7 @@ const DefaultIncrement = {
 const Zoomer = (
     plugin: WidthPlugin,
     key = 'width',
-    incrementMap: {'%'?: number, 'px'?: number} = DefaultIncrement,
+    incrementMap: { '%'?: number, 'px'?: number } = DefaultIncrement,
     type?: '%' | 'px'
 ) => {
     if (!incrementMap) {
@@ -49,7 +49,7 @@ const Zoomer = (
         if (width + increment <= 100) {
             width += increment;
             plugin.settingUtils.set(key, width);
-            plugin.updateStyleVar(width, '%');
+            plugin.updateCenterWidth(width, '%');
             debug(`+${increment}: ${width}%`)
         }
     }
@@ -59,7 +59,7 @@ const Zoomer = (
         if (width - increment >= 40) {
             width -= increment;
             plugin.settingUtils.set(key, width);
-            plugin.updateStyleVar(width, '%');
+            plugin.updateCenterWidth(width, '%');
             debug(`-${increment}: ${width}%`)
         }
     }
@@ -68,7 +68,7 @@ const Zoomer = (
         const increment = incrementMap['px']
         width += increment;
         plugin.settingUtils.set(key, width);
-        plugin.updateStyleVar(width, 'px');
+        plugin.updateCenterWidth(width, 'px');
         debug(`+${increment}: ${width}px`)
     }
     const minusPx = () => {
@@ -76,7 +76,7 @@ const Zoomer = (
         const increment = incrementMap['px']
         width -= increment;
         plugin.settingUtils.set(key, width);
-        plugin.updateStyleVar(width, 'px');
+        plugin.updateCenterWidth(width, 'px');
         debug(`-${increment}: ${width}px`)
     }
 
@@ -129,6 +129,20 @@ export default class WidthPlugin extends Plugin {
     // enableMobile: boolean;
 
     async onload() {
+        changelog(
+            this, 'i18n/changelog.md'
+        ).then(({ Dialog }) => {
+            if (Dialog) {
+                Dialog.setFont('1.2rem');
+                Dialog.setSize({
+                    width: '40%',
+                    height: '25rem'
+                })
+            }
+        }).catch((e) => {
+            console.error(e);
+        });
+
         await this.initConfig();
 
         const enableMobile = this.settingUtils.get('enableMobile');
@@ -177,7 +191,8 @@ export default class WidthPlugin extends Plugin {
             AddHotkey(Zoomer(this, 'width', { '%': 2, 'px': 25 }));
         }
 
-        this.updateStyleVar();
+        this.updateCenterWidth();
+        this.updateOffset();
         // document.documentElement.style.setProperty('--centerWidth', `${width}%`);
         this.iconEle = this.addTopBar({
             icon: this.icon,
@@ -281,20 +296,6 @@ export default class WidthPlugin extends Plugin {
         this.eventBus.on("destroy-protyle", this.onDestroyProtyle);
 
         window.addEventListener('beforeunload', this.beforeUnloadBindThis);
-
-        // changelog(
-        //     this, 'i18n/changelog.md'
-        // ).then(({ Dialog }) => {
-        //     if (Dialog) {
-        //         Dialog.setFont('1.2rem');
-        //         Dialog.setSize({
-        //             width: '40%',
-        //             height: '25rem'
-        //         })
-        //     }
-        // }).catch((e) => {
-        //     console.error(e);
-        // });
     }
 
     onLayoutReady() {
@@ -386,7 +387,7 @@ export default class WidthPlugin extends Plugin {
         return false;
     }
 
-    updateStyleVar(width?: number, mode?: string) {
+    updateCenterWidth(width?: number, mode?: string) {
         mode = mode ?? this.settingUtils.get('widthMode');
         width = width ?? this.settingUtils.get('width');
         let widthStyle = mode === '%' ? `${width}%` : `${width}px`;
@@ -396,6 +397,22 @@ export default class WidthPlugin extends Plugin {
     updateMinPadding() {
         let minPadding = this.settingUtils.get('minPadding');
         document.documentElement.style.setProperty('--editorMinPadding', `${minPadding}px`);
+    }
+
+    updateOffset() {
+        let offset: string = this.settingUtils.get('offset');
+        offset = offset.trim();
+        // 检查 offset 是否为空或 '0'
+        if (offset === '' || offset === '0') {
+            offset = '0px';
+        } else {
+            // 使用正则表达式检查 offset 是否全部为数字
+            if (/^-?\d+(\.\d+)?$/.test(offset)) {
+                // 如果全部为数字，则添加 'px'
+                offset += 'px';
+            }
+        }
+        document.documentElement.style.setProperty('--editorOffset', offset);
     }
 
     async initConfig() {
@@ -412,8 +429,9 @@ export default class WidthPlugin extends Plugin {
                     data.width = 800;
                     this.settingUtils.set('width', data.width);
                 }
-                this.updateStyleVar(data.width, data.widthMode);
+                this.updateCenterWidth(data.width, data.widthMode);
                 this.updateMinPadding();
+                this.updateOffset();
             },
             width: '700px',
             height: '500px'
@@ -482,6 +500,13 @@ export default class WidthPlugin extends Plugin {
             type: 'number',
             title: this.i18n.setting.minPadding.title,
             description: this.i18n.setting.minPadding.description,
+        });
+        this.settingUtils.addItem({
+            key: 'offset',
+            value: '0px',
+            type: 'textinput',
+            title: this.i18n.setting.offset.title,
+            description: this.i18n.setting.offset.description,
         });
         this.settingUtils.addItem({
             key: 'enableMobile',

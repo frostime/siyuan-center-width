@@ -52,7 +52,7 @@ class PercentileWidthDialog extends Dialog {
             header.innerText = `${plugin.i18n.title}: ${width}%`;
             inputCenterWidth.setAttribute("aria-label", `${width}%`);
             // document.documentElement.style.setProperty('--centerWidth', `${width}%`);
-            plugin.updateStyleVar(width)
+            plugin.updateCenterWidth(width)
         });
     }
 }
@@ -94,7 +94,7 @@ class PixelWidthDialog extends Dialog {
             const width = parseInt((e.target as HTMLInputElement).value);
             plugin.settingUtils.set("width", width);
             header.innerText = `${plugin.i18n.title}: ${width}px`;
-            plugin.updateStyleVar(width)
+            plugin.updateCenterWidth(width)
         });
     }
 }
