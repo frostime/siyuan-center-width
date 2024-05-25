@@ -1,6 +1,6 @@
 import { Plugin, showMessage, confirm, getFrontend, IEventBusMap } from "siyuan";
 
-// import { changelog } from "sy-plugin-changelog";
+import { changelog } from "sy-plugin-changelog";
 
 import widthStyle from "./width.css?inline";
 import { SettingUtils } from "./libs/setting-utils";
@@ -129,6 +129,20 @@ export default class WidthPlugin extends Plugin {
     // enableMobile: boolean;
 
     async onload() {
+        changelog(
+            this, 'i18n/changelog.md'
+        ).then(({ Dialog }) => {
+            if (Dialog) {
+                Dialog.setFont('1.2rem');
+                Dialog.setSize({
+                    width: '40%',
+                    height: '25rem'
+                })
+            }
+        }).catch((e) => {
+            console.error(e);
+        });
+
         await this.initConfig();
 
         const enableMobile = this.settingUtils.get('enableMobile');
@@ -282,20 +296,6 @@ export default class WidthPlugin extends Plugin {
         this.eventBus.on("destroy-protyle", this.onDestroyProtyle);
 
         window.addEventListener('beforeunload', this.beforeUnloadBindThis);
-
-        // changelog(
-        //     this, 'i18n/changelog.md'
-        // ).then(({ Dialog }) => {
-        //     if (Dialog) {
-        //         Dialog.setFont('1.2rem');
-        //         Dialog.setSize({
-        //             width: '40%',
-        //             height: '25rem'
-        //         })
-        //     }
-        // }).catch((e) => {
-        //     console.error(e);
-        // });
     }
 
     onLayoutReady() {
