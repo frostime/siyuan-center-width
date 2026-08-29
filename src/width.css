@@ -48,4 +48,32 @@ body.body--window #layouts div.protyle-content:not([data-fullwidth="true"]) div.
     margin-left: var(--lrwidth) !important;
 }
 
+/* SiYuan >= 3.8.0: 编辑器底部反链面板与正文对齐 */
+/* 官方用行内简写写死面板 padding: 0 {右} 16px {左}, 这里用长边距覆盖左右,
+   保留官方 top(0) 与 bottom(16px / pending 态 0), 避免锁定上下边距 */
+#layouts div.layout__center div.protyle-content:not([data-fullwidth="true"]) .sy__backlink--bottom {
+    padding-left: var(--leftWidth) !important;
+    padding-right: var(--rightWidth) !important;
+}
+
+/* 面板内上下文文档自身没有 data-fullwidth, 上面的通用规则在外层全宽时仍会命中;
+   因此无论外层是否全宽, 都复写为官方的层级缩进值 24/16,
+   避免与面板容器 padding 叠加造成双重缩进 */
+#layouts div.layout__center div.protyle-content .sy__backlink--bottom div.protyle-wysiwyg {
+    padding-left: 24px !important;
+    padding-right: 16px !important;
+}
+
+/* 上下文右 padding 固定 16px, refcount 复位为官方 -16px,
+   避免 advanced 模式下 --refcountRight 随主编辑器 padding 变化导致错位 */
+#layouts div.layout__center div.protyle-content .sy__backlink--bottom div.protyle-attr--refcount {
+    right: -16px !important;
+}
+
+/* Mini Window: 对称 --lrwidth (上下文 24/16 与 refcount 复位规则同样命中, 无需分支) */
+body.body--window #layouts div.protyle-content:not([data-fullwidth="true"]) .sy__backlink--bottom {
+    padding-left: var(--lrwidth) !important;
+    padding-right: var(--lrwidth) !important;
+}
+
 
