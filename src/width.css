@@ -56,10 +56,10 @@ body.body--window #layouts div.protyle-content:not([data-fullwidth="true"]) div.
     padding-right: var(--rightWidth) !important;
 }
 
-/* 面板内上下文文档: 上面的 div.protyle-wysiwyg 规则会把 var(--leftWidth) 打进上下文,
-   与容器 padding 叠加造成双重缩进; 复写为官方的层级缩进值 24/16,
-   让上下文在面板内容区基础上保持官方视觉层级 */
-#layouts div.layout__center div.protyle-content:not([data-fullwidth="true"]) .sy__backlink--bottom div.protyle-wysiwyg {
+/* 面板内上下文文档自身没有 data-fullwidth, 上面的通用规则在外层全宽时仍会命中;
+   因此无论外层是否全宽, 都复写为官方的层级缩进值 24/16,
+   避免与面板容器 padding 叠加造成双重缩进 */
+#layouts div.layout__center div.protyle-content .sy__backlink--bottom div.protyle-wysiwyg {
     padding-left: 24px !important;
     padding-right: 16px !important;
 }
