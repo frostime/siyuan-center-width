@@ -17,7 +17,7 @@ jobs:
             - name: Install Node.js
               uses: actions/setup-node@v3
               with:
-                  node-version: 18
+                  node-version: 22
                   registry-url: "https://registry.npmjs.org"
 
               # Install pnpm
@@ -25,7 +25,7 @@ jobs:
               uses: pnpm/action-setup@v2
               id: pnpm-install
               with:
-                  version: 8
+                  version: 11
                   run_install: false
 
             # Get pnpm store directory
