@@ -452,8 +452,8 @@ export default class WidthPlugin extends Plugin {
             title: this.ui18n.setting.widthMode.title,
             description: this.ui18n.setting.widthMode.description,
             options: {
-                '%': '百分比',
-                'px': '像素'
+                '%': this.ui18n.setting.widthMode.options['%'],
+                'px': this.ui18n.setting.widthMode.options.px
             }
         });
         this.settingUtils.addItem({

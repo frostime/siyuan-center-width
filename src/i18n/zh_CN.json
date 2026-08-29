@@ -29,7 +29,11 @@
     },
     "widthMode": {
       "title": "编辑器宽度设置模式",
-      "description": "设置编辑器宽度的单位: 百分比或者 px"
+      "description": "设置编辑器宽度的单位: 百分比或者 px",
+      "options": {
+        "%": "百分比",
+        "px": "像素"
+      }
     },
     "minPadding": {
       "title": "最小内边距 (px)",

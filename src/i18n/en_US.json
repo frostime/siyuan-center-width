@@ -1,7 +1,7 @@
 {
   "title": "Change center editor width",
   "bye": "I hide myself, bye!",
-  "fullWidth": "Please disable full width mode in setting before using this plugin.",
+  "fullWidth": "Please turn off the Adaptive Width in Settings before using this plugin.",
   "setEnableMobile": "Enable in mobile device?",
   "disableOnMobile": "The plugin functionality has been disabled on mobile devices.",
   "setting": {
@@ -29,7 +29,11 @@
     },
     "widthMode": {
       "title": "Editor Width Setting Mode",
-      "description": "Set the unit of editor width: percentage or px"
+      "description": "Set the unit of editor width: percentage or px",
+      "options": {
+        "%": "Percentage",
+        "px": "Pixel"
+      }
     },
     "minPadding": {
       "title": "Minimum Padding (px)",
