@@ -3,6 +3,7 @@ import { Plugin, showMessage, confirm, getFrontend, IEventBusMap } from "siyuan"
 import { changelog } from "sy-plugin-changelog";
 
 import widthStyle from "./width.css?inline";
+import zhCN from "./i18n/zh_CN.json";
 import { SettingUtils } from "./libs/setting-utils";
 import { insertStyle, removeStyle } from "./libs/style";
 import { createDialog } from "./libs/dialog";
@@ -123,6 +124,14 @@ export default class WidthPlugin extends Plugin {
     icon: string = `<svg t="1684328935774" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1746" width="32" height="32"><path d="M180 176h-60c-4.4 0-8 3.6-8 8v656c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V184c0-4.4-3.6-8-8-8z m724 0h-60c-4.4 0-8 3.6-8 8v656c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V184c0-4.4-3.6-8-8-8zM785.3 504.3L657.7 403.6c-4.7-3.7-11.7-0.4-11.7 5.7V476H378v-62.8c0-6-7-9.4-11.7-5.7L238.7 508.3c-3.7 2.9-3.7 8.5 0 11.3l127.5 100.8c4.7 3.7 11.7 0.4 11.7-5.7V548h268v62.8c0 6 7 9.4 11.7 5.7l127.5-100.8c3.8-2.9 3.8-8.5 0.2-11.4z" p-id="1747"></path></svg>`
 
     isFullWidth: boolean;
+
+    /**
+     * siyuan 1.2.5 将 Plugin.i18n 类型收敛为 Record<string, string>,
+     * 但运行时 i18n 是嵌套 JSON, 这里按 zh_CN.json 的结构重新类型化
+     */
+    private get ui18n() {
+        return this.i18n as unknown as typeof zhCN;
+    }
 
     settingUtils: SettingUtils;
     // width: number;
@@ -440,8 +449,8 @@ export default class WidthPlugin extends Plugin {
             key: 'widthMode',
             type: 'select',
             value: '%',
-            title: this.i18n.setting.widthMode.title,
-            description: this.i18n.setting.widthMode.description,
+            title: this.ui18n.setting.widthMode.title,
+            description: this.ui18n.setting.widthMode.description,
             options: {
                 '%': '百分比',
                 'px': '像素'
@@ -451,8 +460,8 @@ export default class WidthPlugin extends Plugin {
             key: 'width',
             value: 70,
             type: 'slider',
-            title: this.i18n.setting.width.title,
-            description: this.i18n.setting.width.description,
+            title: this.ui18n.setting.width.title,
+            description: this.ui18n.setting.width.description,
             createElement: (value) => {
                 let mode = this.settingUtils.get('widthMode');
                 let ele: HTMLInputElement;
@@ -486,8 +495,8 @@ export default class WidthPlugin extends Plugin {
             key: 'miniWindowWidth',
             value: 94,
             type: 'slider',
-            title: this.i18n.setting.miniWindowWidth.title,
-            description: this.i18n.setting.miniWindowWidth.description,
+            title: this.ui18n.setting.miniWindowWidth.title,
+            description: this.ui18n.setting.miniWindowWidth.description,
             slider: {
                 min: 50,
                 max: 100,
@@ -498,39 +507,39 @@ export default class WidthPlugin extends Plugin {
             key: 'minPadding',
             value: 16,
             type: 'number',
-            title: this.i18n.setting.minPadding.title,
-            description: this.i18n.setting.minPadding.description,
+            title: this.ui18n.setting.minPadding.title,
+            description: this.ui18n.setting.minPadding.description,
         });
         this.settingUtils.addItem({
             key: 'offset',
             value: '0px',
             type: 'textinput',
-            title: this.i18n.setting.offset.title,
-            description: this.i18n.setting.offset.description,
+            title: this.ui18n.setting.offset.title,
+            description: this.ui18n.setting.offset.description,
         });
         this.settingUtils.addItem({
             key: 'enableMobile',
             value: false,
             type: 'checkbox',
-            title: this.i18n.setting.enableMobile.title,
-            description: this.i18n.setting.enableMobile.description,
+            title: this.ui18n.setting.enableMobile.title,
+            description: this.ui18n.setting.enableMobile.description,
         });
         this.settingUtils.addItem({
             key: 'enableHotkey',
             value: true,
             type: 'checkbox',
-            title: this.i18n.setting.enableHotkey.title,
-            description: this.i18n.setting.enableHotkey.description,
+            title: this.ui18n.setting.enableHotkey.title,
+            description: this.ui18n.setting.enableHotkey.description,
         });
         this.settingUtils.addItem({
             key: 'mode',
             value: 'simple',
             type: 'select',
-            title: this.i18n.setting.mode.title,
-            description: this.i18n.setting.mode.description,
+            title: this.ui18n.setting.mode.title,
+            description: this.ui18n.setting.mode.description,
             options: {
-                simple: this.i18n.setting.mode.simple,
-                advanced: this.i18n.setting.mode.advanced
+                simple: this.ui18n.setting.mode.simple,
+                advanced: this.ui18n.setting.mode.advanced
             }
         });
 

@@ -9,3 +9,6 @@ index.js
 /i18n
 /dev
 /.vscode
+
+# TypeScript incremental build info
+*.tsbuildinfo

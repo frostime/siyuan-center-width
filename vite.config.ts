@@ -1,5 +1,5 @@
 import { resolve } from "path"
-import { defineConfig, loadEnv } from "vite"
+import { defineConfig, type Plugin } from "vite"
 import minimist from "minimist"
 import { viteStaticCopy } from "vite-plugin-static-copy"
 import livereload from "rollup-plugin-livereload"
@@ -67,7 +67,7 @@ export default defineConfig({
 
         lib: {
             // Could also be a dictionary or array of multiple entry points
-            entry: resolve(__dirname, "src/index.ts"),
+            entry: resolve(import.meta.dirname, "src/index.ts"),
             // the proper extensions will be added
             fileName: "index",
             formats: ["cjs"],
@@ -77,20 +77,11 @@ export default defineConfig({
                 ...(
                     isWatch ? [
                         livereload(devDistDir),
-                        {
-                            //监听静态资源文件
-                            name: 'watch-external',
-                            async buildStart() {
-                                const files = await fg([
-                                    'src/i18n/*.json',
-                                    './README*.md',
-                                    './plugin.json'
-                                ]);
-                                for (let file of files) {
-                                    this.addWatchFile(file);
-                                }
-                            }
-                        }
+                        watchExternalFiles([
+                            'src/i18n/*.json',
+                            './README*.md',
+                            './plugin.json'
+                        ])
                     ] : [
                         zipPack({
                             inDir: './dist',
@@ -111,9 +102,24 @@ export default defineConfig({
                     if (assetInfo.name === "style.css") {
                         return "index.css"
                     }
-                    return assetInfo.name
+                    return assetInfo.name ?? "asset"
                 },
             },
         },
     }
 })
+
+/**
+ * 监听外部静态资源文件, 开发模式下文件变化时触发重新构建
+ */
+function watchExternalFiles(patterns: string[]): Plugin {
+    return {
+        name: 'watch-external',
+        async buildStart() {
+            const files = await fg(patterns);
+            for (let file of files) {
+                this.addWatchFile(file);
+            }
+        }
+    };
+}
