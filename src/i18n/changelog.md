@@ -1,3 +1,13 @@
+## Width Plugin v2.1.1
+
+- 修复集市检查: 调整 plugin.json 清单格式, 使插件包符合社区集市要求
+
+---
+
+- Fix bazaar check: adjust plugin.json manifest format to comply with the community bazaar requirements
+
+---
+
 ## Width Plugin v2.1.0
 
 - 适配 SiYuan 3.8.0 编辑器底部反链面板，使其与正文左右边界对齐，支持偏移、最小边距、Mini Window、全宽等既有语义
