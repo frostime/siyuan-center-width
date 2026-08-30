@@ -37,6 +37,8 @@ export default defineConfig({
                 {
                     src: "./src/i18n/**",
                     dest: "./i18n/",
+                    // vite-plugin-static-copy >= 4 默认保留目录结构, 需 stripBase 平铺
+                    rename: { stripBase: true }
                 },
             ],
         }),

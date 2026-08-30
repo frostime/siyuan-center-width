@@ -15,13 +15,10 @@
     "en_US": "Change the width of center editor"
   },
   "readme": {
+    "default": "README.md",
     "zh_CN": "README.md",
     "en_US": "README_en_US.md"
   },
-  "i18n": [
-    "en_US",
-    "zh_CN"
-  ],
   "funding": {
     "openCollective": "",
     "patreon": "",
