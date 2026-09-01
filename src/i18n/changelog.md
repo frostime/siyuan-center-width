@@ -1,3 +1,13 @@
+## Width Plugin v2.1.2
+
+- 修复: 文档绑定的数据库属性行宽度不随编辑器宽度调节变化的问题 (#31)
+
+---
+
+- Fix: the document-bound database attribute panel no longer stays at a fixed width when adjusting the editor width (#31)
+
+---
+
 ## Width Plugin v2.1.1
 
 - 修复集市检查: 调整 plugin.json 清单格式, 使插件包符合社区集市要求
