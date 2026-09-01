@@ -23,6 +23,14 @@
     margin-left: var(--leftWidth) !important;
 }
 
+/* 文档绑定的数据库属性行 (SiYuan 较新版本): 思源 setPadding() 用内联 margin 写死其宽度,
+   且仅在思源自身 resize 流程中重算, 感知不到本插件对 --centerWidth 的修改.
+   与 title 同理用 !important 长边距覆盖水平方向, 保留思源设置的垂直 8px */
+#layouts div.layout__center div.protyle-content:not([data-fullwidth="true"]) div.protyle-db-attr {
+    margin-left: var(--leftWidth) !important;
+    margin-right: var(--rightWidth) !important;
+}
+
 #layouts div.layout__center div.protyle-content div.protyle-attr--refcount {
     right: var(--refcountRight) !important;
 }
@@ -46,6 +54,12 @@ body.body--window #layouts div.protyle-content:not([data-fullwidth="true"]) div.
 
 body.body--window #layouts div.protyle-content:not([data-fullwidth="true"]) div.protyle-background>div.protyle-background__ia {
     margin-left: var(--lrwidth) !important;
+}
+
+/* Mini Window: 数据库属性行, 同上覆盖水平 margin */
+body.body--window #layouts div.protyle-content:not([data-fullwidth="true"]) div.protyle-db-attr {
+    margin-left: var(--lrwidth) !important;
+    margin-right: var(--lrwidth) !important;
 }
 
 /* SiYuan >= 3.8.0: 编辑器底部反链面板与正文对齐 */
