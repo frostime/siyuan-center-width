@@ -14,7 +14,11 @@
     margin-right: var(--rightWidth) !important;
 }
 
-#layouts div.layout__center div.protyle-content:not([data-fullwidth="true"]) div.protyle-wysiwyg {
+/* 排除嵌套 lite 编辑器 (protyle-lite-fragment, 如 v3.8 表格单元格编辑器):
+   它们是 .protyle-content 的后代, 会被本规则命中; 但官方为它们设了
+   .table__cell-editor .protyle-wysiwyg { padding: 0 !important }, 本规则特异性更高,
+   会压制官方规则导致编辑态左右间距增大, 故按宿主类排除, padding 交由官方样式管理 */
+#layouts div.layout__center div.protyle-content:not([data-fullwidth="true"]) div.protyle-wysiwyg:not(.protyle-lite-fragment .protyle-wysiwyg) {
     padding-left: var(--leftWidth) !important;
     padding-right: var(--rightWidth) !important;
 }
@@ -47,7 +51,8 @@ body.body--window #layouts div.protyle-content:not([data-fullwidth="true"]) div.
     margin-right: var(--lrwidth) !important;
 }
 
-body.body--window #layouts div.protyle-content:not([data-fullwidth="true"]) div.protyle-wysiwyg {
+/* Mini Window 同上: 排除嵌套 lite 编辑器 */
+body.body--window #layouts div.protyle-content:not([data-fullwidth="true"]) div.protyle-wysiwyg:not(.protyle-lite-fragment .protyle-wysiwyg) {
     padding-left: var(--lrwidth) !important;
     padding-right: var(--lrwidth) !important;
 }
