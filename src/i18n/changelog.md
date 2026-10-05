@@ -1,3 +1,13 @@
+## Width Plugin v2.1.3
+
+- 修复: SiYuan 3.8.x 表格单元格进入编辑态后左右间距异常增大，导致内容提前换行的问题 (#32)
+
+---
+
+- Fix: table cells in SiYuan 3.8.x gained extra left/right padding after entering edit state, causing content to wrap early (#32)
+
+---
+
 ## Width Plugin v2.1.2
 
 - 修复: 文档绑定的数据库属性行宽度不随编辑器宽度调节变化的问题 (#31)
